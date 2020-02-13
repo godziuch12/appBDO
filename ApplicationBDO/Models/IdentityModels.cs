@@ -22,6 +22,12 @@ namespace ApplicationBDO.Models
         public string LastName { get; set; }
     }
 
+    public class ApplicationRole : IdentityRole
+    {
+        public ApplicationRole() : base() { }
+        public ApplicationRole(string roleName) : base(roleName) { }
+    }
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
@@ -44,5 +50,9 @@ namespace ApplicationBDO.Models
             modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaim");
             modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogin");
         }
+
+        public virtual DbSet<TransportModels> TransportModels { get; set; }
+        public virtual DbSet<TransmittingModels> TransmittingModels { get; set; }
+        public virtual DbSet<RegistransModels> RegistransModels { get; set; }
     }
 }

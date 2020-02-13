@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
 
-namespace SyntioPass.App_Helpers
+namespace ApplicationBDO.App_Helpers
 {
     public static class GenericPrincipalExtensions
     {

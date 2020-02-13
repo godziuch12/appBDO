@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ApplicationBDO.Models.RegistransModels>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="content">
+    <section id="widget-grid" class="">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-1" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                        <h2>Lista</h2>
+                        <a href="@Url.Action("Create", "Registrans")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Dodaj</a>
+                    </header>
+                    <div>
+                        <div class="jarviswidget-editbox">
+                        </div>
+                        <div class="widget-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.NIP)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.NumerRejestrowy)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Adres)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Nazwa)
+                                        </th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.NIP)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.NumerRejestrowy)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Adres)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Nazwa)
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "Registrans", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Edytuj"><i class="fa fa-pencil"></i></a>
+                                                <a href="@Url.Action("Delete", "Registrans", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Usuń"><i class="fa fa-remove"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+
