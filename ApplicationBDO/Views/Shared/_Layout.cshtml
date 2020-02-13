@@ -1,0 +1,34 @@
+﻿@using ApplicationBDO.App_Helpers
+
+<!DOCTYPE html>
+<html lang="en-us" id="@ViewBag.PageId" class="@Settings.CurrentTheme">
+<head>
+    <meta charset=" utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>System BDO</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    @Styles.Render("~/content/smartadmin")
+    @RenderSection("style", required: false)
+</head>
+
+<body class="smart-style-3">
+    @{ Html.RenderPartial("_Header", RenderSection("topright", false)); }
+    @{ Html.RenderPartialIf("_Menu", Request.IsAuthenticated); }
+    <div id="main" role="main">
+        @*@{ Html.RenderPartialIf("_Ribbon", Request.IsAuthenticated); }*@
+        @RenderBody()
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+
+        Html.RenderPartial("_Footer");
+    }
+
+    @{ Html.RenderPartial("_Scripts", RenderSection("pagespecific", false)); }
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

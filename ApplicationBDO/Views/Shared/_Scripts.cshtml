@@ -1,0 +1,15 @@
+﻿@Scripts.Render("~/scripts/smartadmin")
+
+@Scripts.Render("~/scripts/datatables")
+<script>
+    $(document).ready(function () {
+        pageSetUp();
+        $('#tabs').tabs();
+        drawBreadCrumb();
+    });
+</script>
+
+@if (@Model is HelperResult)
+{
+    @Model
+}

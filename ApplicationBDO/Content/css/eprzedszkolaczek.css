@@ -1,0 +1,199 @@
+﻿/*
+ * It is advised not to edit the smartadmin_production.css
+ * as this will override any changes you make in the 
+ * later versions of this theme. 
+ * 
+ * We advise that you use use this CSS to override 
+ * SmartAdmin styles. 
+ * 
+ * Rename the stylesheet to whatever your liking so it will stay
+ * unique to you with each update of SmartAdmin.
+ */
+
+.nextStepReservation {
+    margin-top: 10px;
+    display: block;
+}
+
+    .nextStepReservation button, .nextStepReservation a {
+        float: right;
+    }
+
+.backStepReservation {
+    margin-top: 10px;
+    margin-left: 220px;
+}
+
+.db-left-2 ul li img {
+    font-size: 30px;
+}
+
+.float-right {
+    float: right !important;
+    width: auto;
+    height: 32px;
+    line-height: 32px;
+    position: relative;
+    border: 0;
+    cursor: pointer;
+    padding: 0 8px;
+    text-align: center;
+    font-size: 15px;
+}
+
+a:hover.float-right {
+    color: azure;
+}
+
+.smart-style-3 nav > ul > li.backgroundMain {
+    background-color: #f78c40 !important;
+    background-image: -moz-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#f78c40),to(#d67632)) !important;
+    background-image: -webkit-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: -o-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: linear-gradient(to bottom,#f78c40,#d67632) !important;
+    color: #fff;
+}
+
+    .smart-style-3 nav > ul > li.backgroundMain a, .smart-style-3 nav > ul > li.backgroundMain a i {
+        color: #fff !important;
+    }
+/* WYSRODKOWANIE W TABELI KOLUMN */
+table th {
+    text-align: center;
+}
+/* WYSRODKOWANIE W TABELI WIERSZY */
+table td {
+    text-align: center;
+}
+
+.padding-top-0 {
+    padding-top: 0 !important;
+}
+
+.padding-top-5 {
+    padding-top: 5px !important;
+}
+
+.padding-bottom-0 {
+    padding-bottom: 0 !important;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5px !important;
+}
+
+.padding-left-5 {
+    padding-left: 5px !important;
+}
+
+.padding-left-10 {
+    padding-left: 10px !important;
+}
+
+.padding-right-5 {
+    padding-right: 5px !important;
+}
+
+.padding-right-10 {
+    padding-right: 10px !important;
+}
+
+.margin-top-0 {
+    margin-top: 0 !important;
+}
+
+.margin-top-5 {
+    margin-top: 5px !important;
+}
+
+.margin-bottom-0 {
+    margin-bottom: 0 !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-left-5 {
+    margin-left: 5px !important;
+}
+
+.margin-left-10 {
+    margin-left: 10px !important;
+}
+
+.margin-right-5 {
+    margin-right: 5px !important;
+}
+
+.margin-right-10 {
+    margin-right: 10px !important;
+}
+
+.margin-right-15 {
+    margin-right: 15px !important;
+}
+/*.smart-form {
+    .input {
+        input {
+            padding: 4px 10px !important;
+        }
+    }
+}*/
+/* SmartForm Bootstrap Validation */
+.center-box {
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+}
+
+#extr-page h4.paragraph-header {
+    width: auto;
+}
+
+#extr-page .smart-form .alert {
+    margin: 4px;
+}
+
+    #extr-page .smart-form .alert li {
+        margin-left: 14px;
+        list-style: none;
+    }
+
+        #extr-page .smart-form .alert li:before {
+            content: "\f071";
+            font-family: FontAwesome;
+            position: absolute;
+            left: 14px;
+        }
+
+#extr-page .smart-form div + fieldset {
+    padding-top: 15px;
+}
+
+.jarviswidget-color-orange2 > header {
+    background-color: #f78c40 !important;
+    background-image: -moz-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#f78c40),to(#d67632)) !important;
+    background-image: -webkit-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: -o-linear-gradient(top,#f78c40,#d67632) !important;
+    background-image: linear-gradient(to bottom,#f78c40,#d67632) !important;
+    color: #fff;
+}
+
+    .jarviswidget-color-orange2 .nav-tabs li:not(.active) a, .jarviswidget-color-orange2 > header > .jarviswidget-ctrls a {
+        color: #fff !important;
+    }
+
+.validation-summary-errors ul {
+    padding-left: 20px;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+    .validation-summary-errors {
+        display: block;
+    }
