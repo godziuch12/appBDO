@@ -2,22 +2,64 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ApplicationBDO.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace ApplicationBDO.Controllers
 {
     public class TransmittingController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        private MongoDBContext dbcontext;
+        private IMongoCollection<TransmittingMongoModels> transmittingCollection;
         // GET: Transmitting
+
+        public TransmittingController()
+        {
+            dbcontext = new MongoDBContext();
+            transmittingCollection = dbcontext.database.GetCollection<TransmittingMongoModels>("Transmitting");
+        }
+
         public ActionResult Index()
         {
-            return View(db.TransmittingModels.ToList());
+            var timerMongo = new Stopwatch();
+            timerMongo.Start();
+            var transmittingMongo = transmittingCollection.AsQueryable<TransmittingMongoModels>().ToList();
+            timerMongo.Stop();
+            TimeSpan timeTakenMongo = timerMongo.Elapsed;
+            var timeLogMongo = timeTakenMongo.ToString(@"m\:ss\.fff");
+
+            var timerSQL = new Stopwatch();
+            timerSQL.Start();
+            var transmittingSQL = db.TransmittingModels.ToList();
+            timerSQL.Stop();
+            TimeSpan timeTakenSQL = timerSQL.Elapsed;
+            var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
+
+            var logsMongo = new LogModels();
+            logsMongo.DataOperacji = DateTime.Now;
+            logsMongo.BazaDanych = "Mongo";
+            logsMongo.CzasOperacji = timeLogMongo;
+            logsMongo.NazwaOperacji = "List";
+            db.LogModels.Add(logsMongo);
+
+            var logsSQL = new LogModels();
+            logsSQL.DataOperacji = DateTime.Now;
+            logsSQL.BazaDanych = "SQL";
+            logsSQL.CzasOperacji = timeLogSQL;
+            logsSQL.NazwaOperacji = "List";
+            db.LogModels.Add(logsSQL);
+
+            db.SaveChanges();
+
+
+            return View(db.TransmittingModels.ToList().Take(5));
         }
 
         // GET: Transmitting/Details/5
@@ -109,9 +151,37 @@ namespace ApplicationBDO.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var timerMongo = new Stopwatch();
+            timerMongo.Start();
+            var transmittingMongo = transmittingCollection.DeleteOne(Builders<TransmittingMongoModels>.Filter.Eq("_id", ObjectId.Parse("5e49a49c7622957a3494e25d")));
+            timerMongo.Stop();
+            TimeSpan timeTakenMongo = timerMongo.Elapsed;
+            var timeLogMongo = timeTakenMongo.ToString(@"m\:ss\.fff");
+
+            var timerSQL = new Stopwatch();
+            timerSQL.Start();
             TransmittingModels transmittingModels = db.TransmittingModels.Find(id);
             db.TransmittingModels.Remove(transmittingModels);
+            timerSQL.Stop();
+            TimeSpan timeTakenSQL = timerSQL.Elapsed;
+            var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
+
+            var logsMongo = new LogModels();
+            logsMongo.DataOperacji = DateTime.Now;
+            logsMongo.BazaDanych = "Mongo";
+            logsMongo.CzasOperacji = timeLogMongo;
+            logsMongo.NazwaOperacji = "Delete";
+            db.LogModels.Add(logsMongo);
+
+            var logsSQL = new LogModels();
+            logsSQL.DataOperacji = DateTime.Now;
+            logsSQL.BazaDanych = "SQL";
+            logsSQL.CzasOperacji = timeLogSQL;
+            logsSQL.NazwaOperacji = "Delete";
+            db.LogModels.Add(logsSQL);
+
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

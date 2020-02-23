@@ -1,64 +1,40 @@
 ﻿@model ApplicationBDO.Models.RegistransModels
 
 @{
-    Layout = null;
+
 }
 
-<!DOCTYPE html>
+<div id="content">
+    <section id="widget-grid" class="">
+        <div class="row">
+            <article class="col-sm-12 col-md-12 col-lg-6">
+                <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-3" data-widget-editbutton="false" data-widget-custombutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+                        <h2>Usuwanie przejmującego</h2>
+                    </header>
+                    <div>
+                        <div class="jarviswidget-editbox">
+                        </div>
+                        <div class="widget-body no-padding">
+                            @using (Html.BeginForm())
+                            {
+                                <header>
+                                    Czy na pewno chcesz usunąć przejmującego?
+                                </header>
+                                @Html.AntiForgeryToken()
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
-    <h3>Are you sure you want to delete this?</h3>
-    <div>
-        <h4>RegistransModels</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.NIP)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.NIP)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.NumerRejestrowy)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.NumerRejestrowy)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Adres)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Adres)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Nazwa)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Nazwa)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
-            @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
-            </div>
-        }
-    </div>
-</body>
-</html>
+                                <footer>
+                                    <a href="@Url.Action("Index","Registrans")" , class="btn btn-primary"><i class="fa fa-arrow-left"></i> Powrót</a>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa fa-remove"></i> Usuń
+                                    </button>
+                                </footer>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>

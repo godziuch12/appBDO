@@ -498,7 +498,7 @@ namespace ApplicationBDO.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Pass");
+            return RedirectToAction("Index", "Transmitting");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

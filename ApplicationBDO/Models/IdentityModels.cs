@@ -1,8 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System.Configuration;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MongoDB.Driver;
 
 namespace ApplicationBDO.Models
 {
@@ -54,5 +56,17 @@ namespace ApplicationBDO.Models
         public virtual DbSet<TransportModels> TransportModels { get; set; }
         public virtual DbSet<TransmittingModels> TransmittingModels { get; set; }
         public virtual DbSet<RegistransModels> RegistransModels { get; set; }
+        public virtual DbSet<LogModels> LogModels { get; set; }
+    }
+
+    public class MongoDBContext
+    {
+        MongoClient client;
+        public IMongoDatabase database;
+        public MongoDBContext()
+        {
+            var mongoClient = new MongoClient(ConfigurationManager.AppSettings["MongoDBHost"]);
+            database = mongoClient.GetDatabase(ConfigurationManager.AppSettings["MongoDBName"]);
+        }
     }
 }
