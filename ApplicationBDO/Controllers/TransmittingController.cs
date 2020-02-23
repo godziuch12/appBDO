@@ -8,6 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ApplicationBDO.Models;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -22,6 +25,26 @@ namespace ApplicationBDO.Controllers
 
         public TransmittingController()
         {
+            ApiClient api = new ApiClient("https://test-bdo.mos.gov.pl/api");
+            Configuration conf = new Configuration(api);
+            conf.Password = "npah7550BS";
+            conf.Username = "User_333124";
+            conf.ApiKey = new Dictionary<string, string>() { { "Authorization", "f67194ff2f5643b08634a0c006ca7cab7095db4394b149daaa93254199790969" } };
+            conf.ApiKeyPrefix = new Dictionary<string, string>() { { "Authorization", "f67194ff2f5643b08634a0c006ca7cab7095db4394b149daaa93254199790969" } };
+            conf.DefaultHeader = new Dictionary<string, string>();
+
+            AuthApi getEup = new AuthApi(conf);
+            var request = new WasteRegisterPublicApiApiModelsRequestsAuthV1EupRequest();
+            request.ClientId = "a9b06fba-e707-47ef-b21a-c9f25932e17c";
+            request.ClientSecret = "f67194ff2f5643b08634a0c006ca7cab7095db4394b149daaa93254199790969";
+            request.PaginationParameters = new WasteRegisterPublicApiApiModelsRequestsAuthV1AuthPaginationParameters()
+            {
+                Order = new WasteRegisterPublicApiApiModelsRequestsAuthV1Aorder() { IsAscending = true },
+                Page = new WasteRegisterPublicApiApiModelsRequestsAuthV1Apage() { Index = 1, Size = 10 },
+            };
+
+            var list = getEup.GetEupList(request);
+
             dbcontext = new MongoDBContext();
             transmittingCollection = dbcontext.database.GetCollection<TransmittingMongoModels>("Transmitting");
         }
