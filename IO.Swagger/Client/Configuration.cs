@@ -197,11 +197,11 @@ namespace IO.Swagger.Client
         /// Initializes a new instance of the Configuration class.
         /// </summary>
         /// <param name="apiClient">Api client.</param>
-        [Obsolete("This constructor caused unexpected sharing of static data. It is no longer supported.", true)]
+        [Obsolete("This constructor caused unexpected sharing of static data. It is no longer supported.", false)]
         // ReSharper disable once UnusedParameter.Local
         public Configuration(ApiClient apiClient)
         {
-
+            _apiClient = apiClient;
         }
 
         #endregion Constructors
@@ -209,7 +209,7 @@ namespace IO.Swagger.Client
 
         #region Properties
 
-        private ApiClient _apiClient = null;
+        public ApiClient _apiClient = null;
         /// <summary>
         /// Gets an instance of an ApiClient for this configuration
         /// </summary>

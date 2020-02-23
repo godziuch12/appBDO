@@ -424,8 +424,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsCarrier (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
+        /// <returns>WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsCarrier (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
 
         /// <summary>
         /// Wyszukiwarka kart, gdzie bieżący podmiot występuje w roli Transportującego
@@ -435,8 +435,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>ApiResponse of WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
+        /// <returns>ApiResponse of WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
         /// <summary>
         /// Wyszukiwarka kart, gdzie bieżący podmiot występuje w roli Przejmującego
         /// </summary>
@@ -446,7 +446,7 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
         /// <returns>WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsReceiverSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        WasteRegisterPublicApiApiModelsCollectionsPG11WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsReceiverSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsReceiver (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsReceiverRequest request = null);
+        WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsReceiverSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsReceiver (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsReceiverRequest request = null);
 
         /// <summary>
         /// Wyszukiwarka kart, gdzie bieżący podmiot występuje w roli Przejmującego
@@ -1028,8 +1028,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>Task of WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        System.Threading.Tasks.Task<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierAsync (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
+        /// <returns>Task of WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        System.Threading.Tasks.Task<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierAsync (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
 
         /// <summary>
         /// Wyszukiwarka kart, gdzie bieżący podmiot występuje w roli Transportującego
@@ -1039,8 +1039,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>Task of ApiResponse (WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)</returns>
-        System.Threading.Tasks.Task<ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>> SearchKpokAsCarrierAsyncWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
+        /// <returns>Task of ApiResponse (WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)</returns>
+        System.Threading.Tasks.Task<ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>> SearchKpokAsCarrierAsyncWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null);
         /// <summary>
         /// Wyszukiwarka kart, gdzie bieżący podmiot występuje w roli Przejmującego
         /// </summary>
@@ -3987,10 +3987,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        public WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsCarrier (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
+        /// <returns>WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        public WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull SearchKpokAsCarrier (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
         {
-             ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> localVarResponse = SearchKpokAsCarrierWithHttpInfo(request);
+             ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> localVarResponse = SearchKpokAsCarrierWithHttpInfo(request);
              return localVarResponse.Data;
         }
 
@@ -3999,8 +3999,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>ApiResponse of WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        public ApiResponse< WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull > SearchKpokAsCarrierWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
+        /// <returns>ApiResponse of WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        public ApiResponse< WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull > SearchKpokAsCarrierWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
         {
 
             var localVarPath = "/WasteRegister/WasteTransferCard/v1/Kpok/carrier/search";
@@ -4053,9 +4053,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>(localVarStatusCode,
+            return new ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)));
+                (WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)));
         }
 
         /// <summary>
@@ -4063,10 +4063,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>Task of WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
-        public async System.Threading.Tasks.Task<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierAsync (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
+        /// <returns>Task of WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull</returns>
+        public async System.Threading.Tasks.Task<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> SearchKpokAsCarrierAsync (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
         {
-             ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> localVarResponse = await SearchKpokAsCarrierAsyncWithHttpInfo(request);
+             ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull> localVarResponse = await SearchKpokAsCarrierAsyncWithHttpInfo(request);
              return localVarResponse.Data;
 
         }
@@ -4076,8 +4076,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request"> (optional)</param>
-        /// <returns>Task of ApiResponse (WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>> SearchKpokAsCarrierAsyncWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
+        /// <returns>Task of ApiResponse (WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>> SearchKpokAsCarrierAsyncWithHttpInfo (WasteRegisterPublicApiApiModelsRequestsWasteRegisterMunicipalWasteTransferCardSearchCardsV1SearchKpokAsCarrierRequest request = null)
         {
 
             var localVarPath = "/WasteRegister/WasteTransferCard/v1/Kpok/carrier/search";
@@ -4130,9 +4130,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>(localVarStatusCode,
+            return new ApiResponse<WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(WasteRegisterPublicApiApiModelsCollectionsPG1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)));
+                (WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(WasteRegisterPublicApiApiModelsCollectionsPaginatedPage1WasteRegisterPublicApiApiModelsResponsesWasteRegisterMuncipalWasteTransferCardV1KpokAsCarrierSearchResultDtoWasteRegisterPublicApiVersion1000CultureneutralPublicKeyTokennull)));
         }
 
         /// <summary>
