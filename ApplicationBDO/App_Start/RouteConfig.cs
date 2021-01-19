@@ -16,7 +16,7 @@ namespace ApplicationBDO
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Transmitting", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Company", action = "IndexSQL", id = UrlParameter.Optional }
             );
         }
     }

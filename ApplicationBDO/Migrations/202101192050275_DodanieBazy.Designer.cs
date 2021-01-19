@@ -7,13 +7,13 @@ namespace ApplicationBDO.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class DodanietModels : IMigrationMetadata
+    public sealed partial class DodanieBazy : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DodanietModels));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DodanieBazy));
         
         string IMigrationMetadata.Id
         {
-            get { return "202002132009028_DodanietModels"; }
+            get { return "202101192050275_DodanieBazy"; }
         }
         
         string IMigrationMetadata.Source

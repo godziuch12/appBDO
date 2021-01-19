@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ApplicationBDO.Models.WasteCodeModels>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="content">
+    <section id="widget-grid" class="">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-1" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                        <h2>Lista</h2>
+                        <a href="@Url.Action("Create", "WasteCode")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Dodaj</a>
+                        <a href="@Url.Action("GetWasteCode", "WasteCode")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Wczytaj dane</a>
+                    </header>
+                    <div>
+                        <div class="jarviswidget-editbox">
+                        </div>
+                        <div class="widget-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.WasteCodeId)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DateCreated)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Code)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Description)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.IsDangerous)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Deleted)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Level)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.ParentId)
+                                        </th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.WasteCodeId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateCreated)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Code)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IsDangerous)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Deleted)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Level)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ParentId)
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "WasteCode", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Edytuj"><i class="fa fa-pencil"></i></a>
+                                                <a href="@Url.Action("Delete", "WasteCode", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Usuń"><i class="fa fa-remove"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+

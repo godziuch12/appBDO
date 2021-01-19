@@ -57,11 +57,12 @@ namespace ApplicationBDO.Models
         public virtual DbSet<TransmittingModels> TransmittingModels { get; set; }
         public virtual DbSet<RegistransModels> RegistransModels { get; set; }
         public virtual DbSet<LogModels> LogModels { get; set; }
+        public virtual DbSet<WasteCodeModels> WasteCodeModels { get; set; }
+        public virtual DbSet<CompanyModels> CompanyModels { get; set; }
     }
 
     public class MongoDBContext
     {
-        MongoClient client;
         public IMongoDatabase database;
         public MongoDBContext()
         {

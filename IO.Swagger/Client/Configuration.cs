@@ -114,7 +114,7 @@ namespace IO.Swagger.Client
         public Configuration()
         {
             UserAgent = "Swagger-Codegen/1.0.0/csharp";
-            BasePath = "https://localhost/api";
+            BasePath = "https://test-bdo.mos.gov.pl/api";
             DefaultHeader = new ConcurrentDictionary<string, string>();
             ApiKey = new ConcurrentDictionary<string, string>();
             ApiKeyPrefix = new ConcurrentDictionary<string, string>();

@@ -9,7 +9,7 @@
     </div>
     <nav>
         <ul>
-            <li class="@Html.RouteIf("Index", "active", "Transmitting")">
+            @*<li class="@Html.RouteIf("Index", "active", "Transmitting")">
                 <a href="@Url.Action("Index", "Transmitting")"><i class="fa fa-lg fa-fw fa-arrow-circle-left"></i> <span class="menu-item-parent">Przekazujący</span></a>
             </li>
             <li class="@Html.RouteIf("Index", "active", "Transport")">
@@ -17,6 +17,15 @@
             </li>
             <li class="@Html.RouteIf("Index", "active", "Registrans")">
                 <a href="@Url.Action("Index", "Registrans")"><i class="fa fa-lg fa-fw fa-camera"></i> <span class="menu-item-parent">Przejmujący</span></a>
+            </li>
+            <li class="@Html.RouteIf("Index", "active", "WasteCode")">
+                <a href="@Url.Action("Index", "WasteCode")"><i class="fa fa-lg fa-fw fa-fw"></i> <span class="menu-item-parent">Kody odpadu</span></a>
+            </li>*@
+            <li class="@Html.RouteIf("IndexSQL", "active", "Company")">
+                <a href="@Url.Action("IndexSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Firmy SQL</span></a>
+            </li>
+            <li class="@Html.RouteIf("IndexNoSQL", "active", "Company")">
+                <a href="@Url.Action("IndexNoSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-plus"></i> <span class="menu-item-parent">Firmy NoSQL</span></a>
             </li>
             <li>
                 <a href="@Url.Action("ChangePassword", "Manage")"> <i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Zmiana hasła</span></a>

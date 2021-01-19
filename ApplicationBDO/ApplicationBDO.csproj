@@ -206,44 +206,29 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RegistransController.cs" />
     <Compile Include="Controllers\TransmittingController.cs" />
     <Compile Include="Controllers\TransportController.cs" />
+    <Compile Include="Controllers\WasteCodeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202002131648364_InitialCreate.cs" />
-    <Compile Include="Migrations\202002131648364_InitialCreate.Designer.cs">
-      <DependentUpon>202002131648364_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002131800310_FirstName.cs" />
-    <Compile Include="Migrations\202002131800310_FirstName.Designer.cs">
-      <DependentUpon>202002131800310_FirstName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002131802051_ChangeNameTable.cs" />
-    <Compile Include="Migrations\202002131802051_ChangeNameTable.Designer.cs">
-      <DependentUpon>202002131802051_ChangeNameTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002131900166_Update1.cs" />
-    <Compile Include="Migrations\202002131900166_Update1.Designer.cs">
-      <DependentUpon>202002131900166_Update1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002132009028_DodanietModels.cs" />
-    <Compile Include="Migrations\202002132009028_DodanietModels.Designer.cs">
-      <DependentUpon>202002132009028_DodanietModels.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202002161939341_DodanieTabeliLOGOW.cs" />
-    <Compile Include="Migrations\202002161939341_DodanieTabeliLOGOW.Designer.cs">
-      <DependentUpon>202002161939341_DodanieTabeliLOGOW.cs</DependentUpon>
+    <Compile Include="Migrations\202101192050275_DodanieBazy.cs" />
+    <Compile Include="Migrations\202101192050275_DodanieBazy.Designer.cs">
+      <DependentUpon>202101192050275_DodanieBazy.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CompanyModels.cs" />
     <Compile Include="Models\LogModels.cs" />
     <Compile Include="Models\RegistransModels.cs" />
+    <Compile Include="Models\CompanyMongoModels.cs" />
     <Compile Include="Models\TransmittingMongoModels.cs" />
     <Compile Include="Models\TransmittingModels.cs" />
     <Compile Include="Models\TransportModels.cs" />
+    <Compile Include="Models\WasteCodeModels.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
@@ -327,6 +312,17 @@
     <Content Include="Views\Transmitting\Index.cshtml" />
     <Content Include="Views\Transmitting\Create.cshtml" />
     <Content Include="Views\Transmitting\Delete.cshtml" />
+    <Content Include="Views\WasteCode\Create.cshtml" />
+    <Content Include="Views\WasteCode\Delete.cshtml" />
+    <Content Include="Views\WasteCode\Details.cshtml" />
+    <Content Include="Views\WasteCode\Edit.cshtml" />
+    <Content Include="Views\WasteCode\Index.cshtml" />
+    <Content Include="Views\Company\Create.cshtml" />
+    <Content Include="Views\Company\Delete.cshtml" />
+    <Content Include="Views\Company\Details.cshtml" />
+    <Content Include="Views\Company\Edit.cshtml" />
+    <Content Include="Views\Company\IndexSQL.cshtml" />
+    <Content Include="Views\Company\IndexNoSQL.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -339,36 +335,20 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202002131648364_InitialCreate.resx">
-      <DependentUpon>202002131648364_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002131800310_FirstName.resx">
-      <DependentUpon>202002131800310_FirstName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002131802051_ChangeNameTable.resx">
-      <DependentUpon>202002131802051_ChangeNameTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002131900166_Update1.resx">
-      <DependentUpon>202002131900166_Update1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002132009028_DodanietModels.resx">
-      <DependentUpon>202002132009028_DodanietModels.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202002161939341_DodanieTabeliLOGOW.resx">
-      <DependentUpon>202002161939341_DodanieTabeliLOGOW.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
       <Project>{3F57CD53-56CD-445B-A8EB-980542DF87BC}</Project>
       <Name>IO.Swagger</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202101192050275_DodanieBazy.resx">
+      <DependentUpon>202101192050275_DodanieBazy.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

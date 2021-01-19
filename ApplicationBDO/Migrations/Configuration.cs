@@ -10,7 +10,6 @@ namespace ApplicationBDO.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "ApplicationBDO.Models.ApplicationDbContext";
         }
 
         protected override void Seed(ApplicationBDO.Models.ApplicationDbContext context)
