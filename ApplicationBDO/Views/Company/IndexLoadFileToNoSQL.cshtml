@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ApplicationBDO.Models.CompanyMongoModels>
+﻿@model IEnumerable<ApplicationBDO.Models.LogModels>
+
+@{
+    ViewBag.Title = "Index";
+}
 
 <div id="content">
     <section id="widget-grid" class="">
@@ -7,7 +11,7 @@
                 <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-1" data-widget-editbutton="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <a href="@Url.Action("GetCompanyNoSQL", "Company")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Wczytaj dane</a>
+                        <a href="@Url.Action("GetLoadToFile", "Company")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Wczytaj dane</a>
                     </header>
                     <div>
                         <div class="jarviswidget-editbox">
@@ -17,67 +21,56 @@
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CompanyId)
+                                            @Html.DisplayNameFor(model => model.OperationName)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.RegistrationNumber)
+                                            @Html.DisplayNameFor(model => model.OperationTime)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Name)
+                                            @Html.DisplayNameFor(model => model.Database)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.NIP)
+                                            @Html.DisplayNameFor(model => model.OperationDate)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Pesel)
+                                            @Html.DisplayNameFor(model => model.NumberOfRecords)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Country)
+                                            @Html.DisplayNameFor(model => model.NumberOfFieldsModel)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Address)
+                                            @Html.DisplayNameFor(model => model.EntityFramework)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.PostalCode)
+                                            @Html.DisplayNameFor(model => model.NameAPI)
                                         </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Teryt)
-                                        </th>
-                                        <th>Akcje</th>
                                     </tr>
                                     @foreach (var item in Model)
                                     {
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CompanyId)
+                                                @Html.DisplayFor(modelItem => item.OperationName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                                @Html.DisplayFor(modelItem => item.OperationTime)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Name)
+                                                @Html.DisplayFor(modelItem => item.Database)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.NIP)
+                                                @Html.DisplayFor(modelItem => item.OperationDate)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Pesel)
+                                                @Html.DisplayFor(modelItem => item.NumberOfRecords)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Country)
+                                                @Html.DisplayFor(modelItem => item.NumberOfFieldsModel)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Address)
+                                                @Html.DisplayFor(modelItem => item.EntityFramework)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.PostalCode)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Teryt)
-                                            </td>
-                                            <td>
-                                                <a href="@Url.Action("Edit", "Company", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Edytuj"><i class="fa fa-pencil"></i></a>
-                                                <a href="@Url.Action("Delete", "Company", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Usuń"><i class="fa fa-remove"></i></a>
+                                                @Html.DisplayFor(modelItem => item.NameAPI)
                                             </td>
                                         </tr>
                                     }

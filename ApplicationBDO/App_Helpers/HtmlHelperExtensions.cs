@@ -38,7 +38,22 @@ namespace ApplicationBDO.App_Helpers
 
             return helper.Raw(_displayVersion);
         }
+        public static String MenuChildOpenIf(this HtmlHelper helper, params String[] activeOnController)
+        {
+            string style = "";
+            var currentController =
+                (helper.ViewContext.RequestContext.RouteData.Values["controller"] ?? string.Empty).ToString().UnDash();
+            foreach (var activeOn in activeOnController)
+            {
+                if (activeOn.Equals(currentController))
+                {
+                    style = "display: block; ";
+                    break;
+                }
+            }
 
+            return style;
+        }
         /// <summary>
         ///     Compares the requested route with the given <paramref name="value" /> value, if a match is found the
         ///     <paramref name="attribute" /> value is returned.

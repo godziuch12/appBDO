@@ -220,6 +220,22 @@
     <Compile Include="Migrations\202101192050275_DodanieBazy.Designer.cs">
       <DependentUpon>202101192050275_DodanieBazy.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101231839230_RozszerzenieLogModels.cs" />
+    <Compile Include="Migrations\202101231839230_RozszerzenieLogModels.Designer.cs">
+      <DependentUpon>202101231839230_RozszerzenieLogModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101231845483_ZmianaLogMOdels.cs" />
+    <Compile Include="Migrations\202101231845483_ZmianaLogMOdels.Designer.cs">
+      <DependentUpon>202101231845483_ZmianaLogMOdels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101231848599_DodanieNamePAiLogModels.cs" />
+    <Compile Include="Migrations\202101231848599_DodanieNamePAiLogModels.Designer.cs">
+      <DependentUpon>202101231848599_DodanieNamePAiLogModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101241405400_ChaneApi.cs" />
+    <Compile Include="Migrations\202101241405400_ChaneApi.Designer.cs">
+      <DependentUpon>202101241405400_ChaneApi.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CompanyModels.cs" />
     <Compile Include="Models\LogModels.cs" />
@@ -1020,8 +1036,8 @@
     <Content Include="Views\Company\Delete.cshtml" />
     <Content Include="Views\Company\Details.cshtml" />
     <Content Include="Views\Company\Edit.cshtml" />
-    <Content Include="Views\Company\IndexSQL.cshtml" />
-    <Content Include="Views\Company\IndexNoSQL.cshtml" />
+    <Content Include="Views\Company\IndexLoadFileToSQL.cshtml" />
+    <Content Include="Views\Company\IndexLoadFileToNoSQL.cshtml" />
     <Content Include="Scripts\libs\jquery-2.1.1.min.map" />
     <Content Include="Scripts\plugin\bootstrap-tags\dist\bootstrap-tagsinput.min.js.map" />
     <Content Include="Scripts\plugin\ckeditor\CHANGES.md" />
@@ -1043,6 +1059,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="packages.config" />
+    <Content Include="Views\Company\IndexLoadApiToFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
@@ -1053,6 +1070,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202101192050275_DodanieBazy.resx">
       <DependentUpon>202101192050275_DodanieBazy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101231839230_RozszerzenieLogModels.resx">
+      <DependentUpon>202101231839230_RozszerzenieLogModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101231845483_ZmianaLogMOdels.resx">
+      <DependentUpon>202101231845483_ZmianaLogMOdels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101231848599_DodanieNamePAiLogModels.resx">
+      <DependentUpon>202101231848599_DodanieNamePAiLogModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101241405400_ChaneApi.resx">
+      <DependentUpon>202101241405400_ChaneApi.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

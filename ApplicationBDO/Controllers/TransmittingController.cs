@@ -47,17 +47,17 @@ namespace ApplicationBDO.Controllers
             var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
 
             var logsMongo = new LogModels();
-            logsMongo.DataOperacji = DateTime.Now;
-            logsMongo.BazaDanych = "Mongo";
-            logsMongo.CzasOperacji = timeLogMongo;
-            logsMongo.NazwaOperacji = "List";
+            logsMongo.OperationDate = DateTime.Now;
+            logsMongo.Database = "Mongo";
+            logsMongo.OperationTime = timeLogMongo;
+            logsMongo.OperationName = "List";
             db.LogModels.Add(logsMongo);
 
             var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "SQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "List";
+            logsSQL.OperationDate = DateTime.Now;
+            logsSQL.Database = "SQL";
+            logsSQL.OperationTime = timeLogSQL;
+            logsSQL.OperationName = "List";
             db.LogModels.Add(logsSQL);
 
             db.SaveChanges();
@@ -171,17 +171,17 @@ namespace ApplicationBDO.Controllers
             var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
 
             var logsMongo = new LogModels();
-            logsMongo.DataOperacji = DateTime.Now;
-            logsMongo.BazaDanych = "Mongo";
-            logsMongo.CzasOperacji = timeLogMongo;
-            logsMongo.NazwaOperacji = "Delete";
+            logsMongo.OperationDate = DateTime.Now;
+            logsMongo.Database = "Mongo";
+            logsMongo.OperationTime = timeLogMongo;
+            logsMongo.OperationName = "Delete";
             db.LogModels.Add(logsMongo);
 
             var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "SQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "Delete";
+            logsSQL.OperationDate = DateTime.Now;
+            logsSQL.Database = "SQL";
+            logsSQL.OperationTime = timeLogSQL;
+            logsSQL.OperationName = "Delete";
             db.LogModels.Add(logsSQL);
 
             db.SaveChanges();

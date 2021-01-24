@@ -1,4 +1,5 @@
 ﻿@using ApplicationBDO.App_Helpers;
+
 <aside id="left-panel">
     <div class="login-info">
         <span>
@@ -21,14 +22,22 @@
             <li class="@Html.RouteIf("Index", "active", "WasteCode")">
                 <a href="@Url.Action("Index", "WasteCode")"><i class="fa fa-lg fa-fw fa-fw"></i> <span class="menu-item-parent">Kody odpadu</span></a>
             </li>*@
-            <li class="@Html.RouteIf("IndexSQL", "active", "Company")">
-                <a href="@Url.Action("IndexSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Firmy SQL</span></a>
+            <li>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Company SQL</span></a>
+                <ul style="@Html.MenuChildOpenIf("Company","Manage")">
+                    <li>
+                        <a href="@Url.Action("IndexLoadApiToFile", "Company")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("IndexLoadFileToSql", "Company")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to sql</span></a>
+                    </li>
+                </ul>
             </li>
             <li class="@Html.RouteIf("IndexNoSQL", "active", "Company")">
-                <a href="@Url.Action("IndexNoSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-plus"></i> <span class="menu-item-parent">Firmy NoSQL</span></a>
+                <a href="@Url.Action("IndexNoSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-plus"></i> <span class="menu-item-parent">Company NoSQL</span></a>
             </li>
             <li>
-                <a href="@Url.Action("ChangePassword", "Manage")"> <i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Zmiana hasła</span></a>
+                <a href="@Url.Action("ChangePassword", "Manage")"> <i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Change password</span></a>
             </li>
         </ul>
     </nav>

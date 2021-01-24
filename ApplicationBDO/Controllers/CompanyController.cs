@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Mvc;
+using System.Xml;
+using System.Xml.Serialization;
 using ApplicationBDO.Models;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
@@ -23,109 +29,74 @@ namespace ApplicationBDO.Controllers
         {
             companyCollection = dbNoSQL.database.GetCollection<CompanyMongoModels>("Company");
         }
-        public ActionResult IndexSQL()
+
+        public ActionResult IndexLoadApiToFile()
         {
-            var timerSQL = new Stopwatch();
-            timerSQL.Start();
-            var companySQL = dbSQL.CompanyModels.ToList();
-            timerSQL.Stop();
-            TimeSpan timeTakenSQL = timerSQL.Elapsed;
-            var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
-
-            var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "SQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "LIST";
-            dbSQL.LogModels.Add(logsSQL);
-
-            dbSQL.SaveChanges();
-
-            return View(dbSQL.CompanyModels.ToList());
+            return View(dbSQL.LogModels.Where(m => m.OperationName == "LOAD").ToList());
         }
 
-        public ActionResult IndexNoSQL()
-        {
-            var timerMongo = new Stopwatch();
-
-            timerMongo.Start();
-            var companyMongo = companyCollection.AsQueryable<CompanyMongoModels>().ToList();
-            timerMongo.Stop();
-
-            TimeSpan timeTakenMongo = timerMongo.Elapsed;
-            var timeLogMongo = timeTakenMongo.ToString(@"m\:ss\.fff");
-
-            var logsMongo = new LogModels();
-            logsMongo.DataOperacji = DateTime.Now;
-            logsMongo.BazaDanych = "NoSQL";
-            logsMongo.CzasOperacji = timeLogMongo;
-            logsMongo.NazwaOperacji = "LIST";
-            dbSQL.LogModels.Add(logsMongo);
-
-            return View(companyMongo.ToList());
-        }
-
-        public ActionResult GetCompanySQL()
+        public ActionResult GetLoadApiToFile()
         {
             var conf = Configuration();
 
             SearchApi search = new SearchApi(conf);
-            var companyList = search.SearchCompany("10");
 
-            var timerSQL = new Stopwatch();
-            timerSQL.Start();
+            var timer = new Stopwatch();
+            timer.Start();
 
-            foreach (var item in companyList)
+            int n = 0;
+            var colection = new List<CompanyModels>();
+            do
             {
-                var company = new CompanyModels();
-                company.CompanyId = item.CompanyId;
-                company.Address = item.Address;
-                company.NIP = item.Nip;
-                company.Country = item.Country;
-                company.PostalCode = item.PostalCode;
-                company.RegistrationNumber = item.RegistrationNumber;
-                company.Pesel = item.Pesel;
-                company.Teryt = item.Teryt;
+                var companyList = search.SearchCompany("10");
+                colection.AddRange(companyList.Select(TranslateCompanyModels).ToList());
 
-                dbSQL.CompanyModels.Add(company);
-            }
+                n++;
+            } while (n < 100);
 
-            dbSQL.SaveChanges();
-            timerSQL.Stop();
+            SerializeObject(colection);
 
-            TimeSpan timeTakenSQL = timerSQL.Elapsed;
-            var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
+            timer.Stop();
 
-            var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "SQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "GET";
+            TimeSpan timeTaken = timer.Elapsed;
+            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
 
-            dbSQL.LogModels.Add(logsSQL);
+            var logs = new LogModels();
+            logs.OperationDate = DateTime.Now;
+            logs.Database = "SQL/NoSQL";
+            logs.OperationTime = timeLog;
+            logs.OperationName = "LOAD";
+            logs.NameAPI = "SearchCompany";
+            logs.NumberOfRecords = 1000;
+            logs.NumberOfFieldsModel = 1;
+            logs.EntityFramework = true;
+
+            dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexSQL");
+            return RedirectToAction("IndexLoadApiToFile");
         }
 
-        public ActionResult GetCompanyNoSQL()
+        public ActionResult IndexLoadFileToSql()
         {
-            var conf = Configuration();
+            return View(dbSQL.LogModels.Where(m => m.OperationName == "INSERT" && m.Database == "SQL").ToList());
+        }
 
-            SearchApi search = new SearchApi(conf);
-            var companyList = search.SearchCompany("10");
-
+        public ActionResult GetLoadFileToSql()
+        {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            foreach (var item in companyList)
+            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+
+            foreach (var item in collectionCompanyFromFile)
             {
                 companyCollection.InsertOne(new CompanyMongoModels
                 {
                     Id = Guid.NewGuid(),
                     CompanyId = item.CompanyId,
                     Address = item.Address,
-                    NIP = item.Nip,
+                    NIP = item.NIP,
                     Country = item.Country,
                     PostalCode = item.PostalCode,
                     RegistrationNumber = item.RegistrationNumber,
@@ -140,15 +111,125 @@ namespace ApplicationBDO.Controllers
             var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
 
             var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "NoSQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "GET";
+            logsSQL.OperationDate = DateTime.Now;
+            logsSQL.Database = "NoSQL";
+            logsSQL.OperationTime = timeLogSQL;
+            logsSQL.OperationName = "INSERT";
 
             dbSQL.LogModels.Add(logsSQL);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexNoSQL");
+            return RedirectToAction("IndexLoadFileToSql");
+        }
+
+        public ActionResult IndexLoadFileToNoSql()
+        {
+            return View(dbSQL.LogModels.Where(m => m.OperationName == "INSERT" && m.Database == "NoSQL").ToList());
+        }
+
+        public ActionResult GetLoadFileToNoSql()
+        {
+            var timerSQL = new Stopwatch();
+            timerSQL.Start();
+
+            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+
+            foreach (var item in collectionCompanyFromFile)
+            {
+                companyCollection.InsertOne(new CompanyMongoModels
+                {
+                    Id = Guid.NewGuid(),
+                    CompanyId = item.CompanyId,
+                    Address = item.Address,
+                    NIP = item.NIP,
+                    Country = item.Country,
+                    PostalCode = item.PostalCode,
+                    RegistrationNumber = item.RegistrationNumber,
+                    Pesel = item.Pesel,
+                    Teryt = item.Teryt
+                });
+            }
+
+            timerSQL.Stop();
+
+            TimeSpan timeTakenSQL = timerSQL.Elapsed;
+            var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
+
+            var logsSQL = new LogModels();
+            logsSQL.OperationDate = DateTime.Now;
+            logsSQL.Database = "NoSQL";
+            logsSQL.OperationTime = timeLogSQL;
+            logsSQL.OperationName = "INSERT";
+
+            dbSQL.LogModels.Add(logsSQL);
+            dbSQL.SaveChanges();
+
+            return RedirectToAction("IndexLoadFileToNoSql");
+        }
+
+        public CompanyModels TranslateCompanyModels(WasteRegisterPublicApiApiModelsElasticsearchCompanyEs companyList)
+        {
+            return new CompanyModels()
+            {
+                CompanyId = companyList.CompanyId,
+                Address = companyList.Address,
+                NIP = companyList.Nip,
+                Country = companyList.Country,
+                PostalCode = companyList.PostalCode,
+                RegistrationNumber = companyList.RegistrationNumber,
+                Pesel = companyList.Pesel,
+                Teryt = companyList.Teryt
+            };
+        }
+
+        public void SerializeObject<T>(List<T> serializableObject)
+        {
+            if (serializableObject == null) { return; }
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<T>));
+                var path = "C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml";
+                FileStream file = System.IO.File.Create(path);
+                serializer.Serialize(file, serializableObject);
+                file.Close();
+            }
+            catch (Exception ex)
+            {
+                //Log exception here
+            }
+        }
+
+        public T DeSerializeObject<T>(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) { return default(T); }
+
+            T objectOut = default(T);
+
+            try
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                //xmlDocument.BaseURI("C://Users//adria//OneDrive//Pulpit");
+                xmlDocument.Load(@"C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml");
+                string xmlString = xmlDocument.OuterXml;
+
+                using (StringReader read = new StringReader(xmlString))
+                {
+                    Type outType = typeof(T);
+
+                    XmlSerializer serializer = new XmlSerializer(outType);
+                    using (XmlReader reader = new XmlTextReader(read))
+                    {
+                        objectOut = (T)serializer.Deserialize(reader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Log exception here
+            }
+
+            return objectOut;
         }
 
         public Configuration Configuration()
@@ -180,86 +261,6 @@ namespace ApplicationBDO.Controllers
             conf.AddApiKeyPrefix("Authorization", "Bearer");
 
             return conf;
-        }
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt")] CompanyModels companyModels)
-        {
-            if (ModelState.IsValid)
-            {
-                dbSQL.CompanyModels.Add(companyModels);
-                dbSQL.SaveChanges();
-                return RedirectToAction("IndexSQL");
-            }
-
-            return View(companyModels);
-        }
-
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CompanyModels companyModels = dbSQL.CompanyModels.Find(id);
-            if (companyModels == null)
-            {
-                return HttpNotFound();
-            }
-            return View(companyModels);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt")] CompanyModels companyModels)
-        {
-            if (ModelState.IsValid)
-            {
-                dbSQL.Entry(companyModels).State = EntityState.Modified;
-                dbSQL.SaveChanges();
-                return RedirectToAction("IndexSQL");
-            }
-            return View(companyModels);
-        }
-
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CompanyModels companyModels = dbSQL.CompanyModels.Find(id);
-            if (companyModels == null)
-            {
-                return HttpNotFound();
-            }
-            return View(companyModels);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            CompanyModels companyModels = dbSQL.CompanyModels.Find(id);
-            dbSQL.CompanyModels.Remove(companyModels);
-            dbSQL.SaveChanges();
-
-            return RedirectToAction("IndexSQL");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                dbSQL.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

@@ -81,10 +81,10 @@ namespace ApplicationBDO.Controllers
             var timeLogSQL = timeTakenSQL.ToString(@"m\:ss\.fff");
 
             var logsSQL = new LogModels();
-            logsSQL.DataOperacji = DateTime.Now;
-            logsSQL.BazaDanych = "SQL";
-            logsSQL.CzasOperacji = timeLogSQL;
-            logsSQL.NazwaOperacji = "Dodanie kodow odpadow z api";
+            logsSQL.OperationDate = DateTime.Now;
+            logsSQL.Database = "SQL";
+            logsSQL.OperationTime = timeLogSQL;
+            logsSQL.OperationName = "Dodanie kodow odpadow z api";
             db.LogModels.Add(logsSQL);
 
 
