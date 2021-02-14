@@ -31,12 +31,12 @@ namespace ApplicationBDO.Controllers
 
         // DATABASE MONGODB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
-        public ActionResult IndexFileToNoSql()
+        public ActionResult Index()
         {
             return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL").ToList());
         }
 
-        public async Task<ActionResult> SelectFileToNoSql()
+        public async Task<ActionResult> Select()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
@@ -62,10 +62,10 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToNoSql");
+            return RedirectToAction("Index");
         }
 
-        public ActionResult InsertFileToNoSql()
+        public ActionResult Insert()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
@@ -107,17 +107,17 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToNoSql");
+            return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> UpdateFileToNoSql()
-        {
+        public async Task<ActionResult> Update()
+        {   
+            var update = Builders<CompanyMongoModels>.Update.Set(s => s.Country, "Anglia");
 
-            var filter = Builders<CompanyMongoModels>.Filter.Eq(s => s.CompanyId, "9da0b778-3fa4-42ba-bd47-4ca661d09e9d");
-            var update = Builders<CompanyMongoModels>.Update.Set(s => s.Country, "Niemcy");
             var timerSQL = new Stopwatch();
             timerSQL.Start();
-            await companyCollection.UpdateOneAsync(filter, update);
+
+            await companyCollection.UpdateManyAsync( _ => true, update);
 
             timerSQL.Stop();
 
@@ -137,8 +137,37 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToNoSql");
+            return RedirectToAction("Index");
         }
+
+        public async Task<ActionResult> Delete()
+        {
+            var timerSQL = new Stopwatch();
+            timerSQL.Start();
+
+            await companyCollection.DeleteManyAsync(_ => true);
+
+            timerSQL.Stop();
+
+            TimeSpan timeTaken = timerSQL.Elapsed;
+            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+
+            var logs = new LogModels();
+            logs.OperationDate = DateTime.Now;
+            logs.Database = "NoSQL";
+            logs.OperationTime = timeLog;
+            logs.OperationName = "DELETE";
+            logs.NameAPI = "SearchCompany";
+            logs.NumberOfRecords = numberOfRecrds;
+            logs.NumberOfFieldsModel = 10;
+            logs.EntityFramework = true;
+
+            dbSQL.LogModels.Add(logs);
+            dbSQL.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
 
         public T DeSerializeObject<T>(string fileName)
         {
@@ -163,6 +192,7 @@ namespace ApplicationBDO.Controllers
             {
                 //Log exception here
             }
+
             return objectOut;
         }
     }

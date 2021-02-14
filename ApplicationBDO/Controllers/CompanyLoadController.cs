@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
 using IO.Swagger.Api;
@@ -18,7 +17,7 @@ namespace ApplicationBDO.Controllers
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
         private int numberOfRecrds = 100000;
 
-        public ActionResult IndexLoadApiToFile()
+        public ActionResult Index()
         {
             return View(dbSQL.LogModels.Where(m => m.OperationName == "LOAD").ToList());
         }

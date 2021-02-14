@@ -11,13 +11,13 @@
     <nav>
         <ul>
             <li>
-                <a href="@Url.Action("IndexLoadApiToFile", "CompanyLoad")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
+                <a href="@Url.Action("Index", "CompanyLoad")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
             </li>
             <li>
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Company SQL</span></a>
                 <ul style="@Html.MenuChildOpenIf("CompanySQL")">
                     <li>
-                        <a href="@Url.Action("IndexFileToSql", "CompanySQL")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to Sql</span></a>
+                        <a href="@Url.Action("Index", "CompanySQL")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to Sql</span></a>
                     </li>
                 </ul>
             </li>
@@ -25,7 +25,7 @@
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-users"></i> <span class="menu-item-parent">Company NoSQL</span></a>
                 <ul style="@Html.MenuChildOpenIf("CompanyNoSQL")">
                     <li>
-                        <a href="@Url.Action("IndexFileToNoSql", "CompanyNoSQL")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file to NoSql</span></a>
+                        <a href="@Url.Action("Index", "CompanyNoSQL")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file to NoSql</span></a>
                     </li>
                 </ul>
             </li>

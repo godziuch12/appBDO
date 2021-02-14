@@ -1013,8 +1013,8 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_TopRight.cshtml" />
     <Content Include="Views\Shared\_Ribbon.cshtml" />
-    <Content Include="Views\CompanySQL\IndexFileToSQL.cshtml" />
-    <Content Include="Views\CompanyNoSQL\IndexFileToNoSQL.cshtml" />
+    <Content Include="Views\CompanySQL\Index.cshtml" />
+    <Content Include="Views\CompanyNoSQL\Index.cshtml" />
     <Content Include="Scripts\libs\jquery-2.1.1.min.map" />
     <Content Include="Scripts\plugin\bootstrap-tags\dist\bootstrap-tagsinput.min.js.map" />
     <Content Include="Scripts\plugin\ckeditor\CHANGES.md" />
@@ -1036,7 +1036,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="packages.config" />
-    <Content Include="Views\CompanyLoad\IndexLoadApiToFile.cshtml" />
+    <Content Include="Views\CompanyLoad\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">

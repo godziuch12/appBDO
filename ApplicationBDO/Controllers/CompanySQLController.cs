@@ -4,15 +4,10 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-using MongoDB.Driver;
 
 namespace ApplicationBDO.Controllers
 {
@@ -23,17 +18,17 @@ namespace ApplicationBDO.Controllers
 
         // DATABASE MSSQL ---------------------- SELECT / INSERT / UPDATE / DELETE
 
-        public ActionResult IndexFileToSql()
+        public ActionResult Index()
         {
             return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL").ToList());
         }
 
-        public ActionResult SelectFileToSql()
+        public ActionResult Select()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompanyFromFile = dbSQL.CompanyModels.ToList();
+            var selectCompany = dbSQL.CompanyModels.ToList();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString(@"m\:ss\.fff");
@@ -51,16 +46,16 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToSql");
+            return RedirectToAction("Index");
         }
 
-        public ActionResult InsertFileToSql()
+        public ActionResult Insert()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
-            dbSQL.CompanyModels.AddRange(collectionCompanyFromFile);
+            var insertCompany = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+            dbSQL.CompanyModels.AddRange(insertCompany);
 
             dbSQL.SaveChanges();
             timerSQL.Stop();
@@ -81,10 +76,10 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToSql");
+            return RedirectToAction("Index");
         }
 
-        public ActionResult UpdateFileToSql()
+        public ActionResult Update()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
@@ -115,7 +110,38 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexFileToSql");
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete()
+        {
+            var timerSQL = new Stopwatch();
+            timerSQL.Start();
+
+            var deleteCompany = dbSQL.CompanyModels.ToList();
+
+            dbSQL.CompanyModels.RemoveRange(deleteCompany);
+
+            dbSQL.SaveChanges();
+            timerSQL.Stop();
+
+            TimeSpan timeTaken = timerSQL.Elapsed;
+            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+
+            var logs = new LogModels();
+            logs.OperationDate = DateTime.Now;
+            logs.Database = "SQL";
+            logs.OperationTime = timeLog;
+            logs.OperationName = "DELETE";
+            logs.NameAPI = "SearchCompany";
+            logs.NumberOfRecords = numberOfRecrds;
+            logs.NumberOfFieldsModel = 10;
+            logs.EntityFramework = true;
+
+            dbSQL.LogModels.Add(logs);
+            dbSQL.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         public T DeSerializeObject<T>(string fileName)
@@ -141,6 +167,7 @@ namespace ApplicationBDO.Controllers
             {
                 //Log exception here
             }
+
             return objectOut;
         }
     }
