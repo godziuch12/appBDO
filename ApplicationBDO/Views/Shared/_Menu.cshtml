@@ -10,34 +10,22 @@
     </div>
     <nav>
         <ul>
-            @*<li class="@Html.RouteIf("Index", "active", "Transmitting")">
-                <a href="@Url.Action("Index", "Transmitting")"><i class="fa fa-lg fa-fw fa-arrow-circle-left"></i> <span class="menu-item-parent">Przekazujący</span></a>
-            </li>
-            <li class="@Html.RouteIf("Index", "active", "Transport")">
-                <a href="@Url.Action("Index", "Transport")"><i class="fa fa-lg fa-fw fa-credit-card"></i> <span class="menu-item-parent">Transportujący</span></a>
-            </li>
-            <li class="@Html.RouteIf("Index", "active", "Registrans")">
-                <a href="@Url.Action("Index", "Registrans")"><i class="fa fa-lg fa-fw fa-camera"></i> <span class="menu-item-parent">Przejmujący</span></a>
-            </li>
-            <li class="@Html.RouteIf("Index", "active", "WasteCode")">
-                <a href="@Url.Action("Index", "WasteCode")"><i class="fa fa-lg fa-fw fa-fw"></i> <span class="menu-item-parent">Kody odpadu</span></a>
-            </li>*@
             <li>
-                <a href="@Url.Action("IndexLoadApiToFile", "Company")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
+                <a href="@Url.Action("IndexLoadApiToFile", "CompanyLoad")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
             </li>
             <li>
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Company SQL</span></a>
-                <ul style="@Html.MenuChildOpenIf("Company")">
+                <ul style="@Html.MenuChildOpenIf("CompanySQL")">
                     <li>
-                        <a href="@Url.Action("IndexFileToSql", "Company")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to Sql</span></a>
+                        <a href="@Url.Action("IndexFileToSql", "CompanySQL")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to Sql</span></a>
                     </li>
                 </ul>
             </li>
             <li>
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-users"></i> <span class="menu-item-parent">Company NoSQL</span></a>
-                <ul style="@Html.MenuChildOpenIf("Company")">
+                <ul style="@Html.MenuChildOpenIf("CompanyNoSQL")">
                     <li>
-                        <a href="@Url.Action("IndexFileToNoSql", "Company")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file to NoSql</span></a>
+                        <a href="@Url.Action("IndexFileToNoSql", "CompanyNoSQL")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file to NoSql</span></a>
                     </li>
                 </ul>
             </li>

@@ -237,6 +237,10 @@
     <Compile Include="Migrations\202102111222078_ZMianaModeluLog.Designer.cs">
       <DependentUpon>202102111222078_ZMianaModeluLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102141550013_UsiniecieDanych.cs" />
+    <Compile Include="Migrations\202102141550013_UsiniecieDanych.Designer.cs">
+      <DependentUpon>202102141550013_UsiniecieDanych.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CompanyModels.cs" />
     <Compile Include="Models\LogModels.cs" />
@@ -1058,6 +1062,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102111222078_ZMianaModeluLog.resx">
       <DependentUpon>202102111222078_ZMianaModeluLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102141550013_UsiniecieDanych.resx">
+      <DependentUpon>202102141550013_UsiniecieDanych.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

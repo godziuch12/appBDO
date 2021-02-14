@@ -53,11 +53,8 @@ namespace ApplicationBDO.Models
             modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogin");
         }
 
-        public virtual DbSet<TransportModels> TransportModels { get; set; }
-        public virtual DbSet<TransmittingModels> TransmittingModels { get; set; }
-        public virtual DbSet<RegistransModels> RegistransModels { get; set; }
+
         public virtual DbSet<LogModels> LogModels { get; set; }
-        public virtual DbSet<WasteCodeModels> WasteCodeModels { get; set; }
         public virtual DbSet<CompanyModels> CompanyModels { get; set; }
     }
 
