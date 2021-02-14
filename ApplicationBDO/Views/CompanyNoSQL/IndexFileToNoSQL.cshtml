@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ApplicationBDO.Models.WasteCodeModels>
+﻿@model IEnumerable<ApplicationBDO.Models.LogModels>
 
 @{
     ViewBag.Title = "Index";
@@ -11,9 +11,9 @@
                 <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-1" data-widget-editbutton="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <h2>Lista</h2>
-                        <a href="@Url.Action("Create", "WasteCode")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Dodaj</a>
-                        <a href="@Url.Action("GetWasteCode", "WasteCode")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> Wczytaj dane</a>
+                        <a href="@Url.Action("InsertFileToNoSql", "Company")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> INSERT </a>
+                        <a href="@Url.Action("SelectFileToNoSql", "Company")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> SELECT </a>
+                        <a href="@Url.Action("UpdateFileToNoSql", "Company")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Dodaj"><i class="fa fa-plus"></i> UPDATE </a>
                     </header>
                     <div>
                         <div class="jarviswidget-editbox">
@@ -23,61 +23,56 @@
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.WasteCodeId)
+                                            @Html.DisplayNameFor(model => model.OperationName)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.DateCreated)
+                                            @Html.DisplayNameFor(model => model.OperationTime)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Code)
+                                            @Html.DisplayNameFor(model => model.Database)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Description)
+                                            @Html.DisplayNameFor(model => model.OperationDate)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.IsDangerous)
+                                            @Html.DisplayNameFor(model => model.NumberOfRecords)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Deleted)
+                                            @Html.DisplayNameFor(model => model.NumberOfFieldsModel)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Level)
+                                            @Html.DisplayNameFor(model => model.EntityFramework)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.ParentId)
+                                            @Html.DisplayNameFor(model => model.NameAPI)
                                         </th>
-                                        <th>Akcje</th>
                                     </tr>
                                     @foreach (var item in Model)
                                     {
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.WasteCodeId)
+                                                @Html.DisplayFor(modelItem => item.OperationName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.DateCreated)
+                                                @Html.DisplayFor(modelItem => item.OperationTime)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Code)
+                                                @Html.DisplayFor(modelItem => item.Database)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Description)
+                                                @Html.DisplayFor(modelItem => item.OperationDate)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.IsDangerous)
+                                                @Html.DisplayFor(modelItem => item.NumberOfRecords)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Deleted)
+                                                @Html.DisplayFor(modelItem => item.NumberOfFieldsModel)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Level)
+                                                @Html.DisplayFor(modelItem => item.EntityFramework)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.ParentId)
-                                            </td>
-                                            <td>
-                                                <a href="@Url.Action("Edit", "WasteCode", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Edytuj"><i class="fa fa-pencil"></i></a>
-                                                <a href="@Url.Action("Delete", "WasteCode", new {id = item.Id})" class="btn btn-default" rel="tooltip" data-placement="bottom" data-original-title="Usuń"><i class="fa fa-remove"></i></a>
+                                                @Html.DisplayFor(modelItem => item.NameAPI)
                                             </td>
                                         </tr>
                                     }

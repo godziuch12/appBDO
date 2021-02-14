@@ -17,6 +17,9 @@ namespace ApplicationBDO.Models
         public int NumberOfRecords { get; set; }
         public int NumberOfFieldsModel{ get; set; }
         public bool EntityFramework { get; set; }
-        public string  NameAPI { get; set; }
+        public string NameAPI { get; set; }
+        public string SizeFile { get; set; }
+        public bool NoTracing { get; set; }
+        public bool BulkLoading { get; set; }
     }
 }

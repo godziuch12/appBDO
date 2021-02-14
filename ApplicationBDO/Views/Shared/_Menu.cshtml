@@ -23,18 +23,23 @@
                 <a href="@Url.Action("Index", "WasteCode")"><i class="fa fa-lg fa-fw fa-fw"></i> <span class="menu-item-parent">Kody odpadu</span></a>
             </li>*@
             <li>
+                <a href="@Url.Action("IndexLoadApiToFile", "Company")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
+            </li>
+            <li>
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Company SQL</span></a>
-                <ul style="@Html.MenuChildOpenIf("Company","Manage")">
+                <ul style="@Html.MenuChildOpenIf("Company")">
                     <li>
-                        <a href="@Url.Action("IndexLoadApiToFile", "Company")"><i class="fa fa-lg fa-fw fa-briefcase"></i> <span class="menu-item-parent">Load api to file</span></a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("IndexLoadFileToSql", "Company")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to sql</span></a>
+                        <a href="@Url.Action("IndexFileToSql", "Company")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file to Sql</span></a>
                     </li>
                 </ul>
             </li>
-            <li class="@Html.RouteIf("IndexNoSQL", "active", "Company")">
-                <a href="@Url.Action("IndexNoSQL", "Company")"><i class="fa fa-lg fa-fw fa-fw fa-plus"></i> <span class="menu-item-parent">Company NoSQL</span></a>
+            <li>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-users"></i> <span class="menu-item-parent">Company NoSQL</span></a>
+                <ul style="@Html.MenuChildOpenIf("Company")">
+                    <li>
+                        <a href="@Url.Action("IndexFileToNoSql", "Company")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file to NoSql</span></a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="@Url.Action("ChangePassword", "Manage")"> <i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Change password</span></a>
