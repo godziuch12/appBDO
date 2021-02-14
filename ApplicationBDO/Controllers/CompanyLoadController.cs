@@ -15,7 +15,7 @@ namespace ApplicationBDO.Controllers
     public class CompanyLoadController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private int numberOfRecrds = 100000;
+        private int numberOfRecrds = 1000000;
 
         public ActionResult Index()
         {
@@ -61,7 +61,7 @@ namespace ApplicationBDO.Controllers
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
 
-            return RedirectToAction("IndexLoadApiToFile");
+            return RedirectToAction("Index");
         }
 
         public CompanyModels TranslateCompanyModels(WasteRegisterPublicApiApiModelsElasticsearchCompanyEs companyList)

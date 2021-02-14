@@ -28,7 +28,6 @@ namespace ApplicationBDO.Controllers
             companyCollection = dbNoSQL.database.GetCollection<CompanyMongoModels>("Company");
         }
 
-
         // DATABASE MONGODB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
