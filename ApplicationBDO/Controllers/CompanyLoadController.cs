@@ -15,7 +15,7 @@ namespace ApplicationBDO.Controllers
     public class CompanyLoadController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private int numberOfRecrds = 1000000;
+        private int numberOfRecrds = 2000000;
 
         public ActionResult Index()
         {
@@ -36,17 +36,17 @@ namespace ApplicationBDO.Controllers
             do
             {
                 var companyList = search.SearchCompany("10");
-                colection.AddRange(companyList.Select(TranslateCompanyModels).ToList());
+                colection.AddRange(companyList.Select(TranslateCompanyModels));
 
                 n++;
             } while (n < (numberOfRecrds / 10));
 
-            SerializeObject(colection);
+            var length = SerializeObject(colection);
 
             timer.Stop();
 
             TimeSpan timeTaken = timer.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -56,6 +56,7 @@ namespace ApplicationBDO.Controllers
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = numberOfRecrds;
             logs.NumberOfFieldsModel = 10;
+            logs.SizeFile = length.ToString();
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -81,9 +82,9 @@ namespace ApplicationBDO.Controllers
             };
         }
 
-        public void SerializeObject<T>(List<T> serializableObject)
+        public long SerializeObject<T>(List<T> serializableObject)
         {
-            if (serializableObject == null) { return; }
+            if (serializableObject == null) { return 0; }
 
             try
             {
@@ -92,11 +93,14 @@ namespace ApplicationBDO.Controllers
                 FileStream file = System.IO.File.Create(path);
                 serializer.Serialize(file, serializableObject);
                 file.Close();
+
+                return file.Length;
             }
             catch (Exception ex)
             {
                 //Log exception here
             }
+            return 0;
         }
 
         public Configuration Configuration()

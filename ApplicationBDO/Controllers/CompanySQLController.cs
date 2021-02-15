@@ -14,7 +14,6 @@ namespace ApplicationBDO.Controllers
     public class CompanySQLController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private int numberOfRecrds = 100000;
 
         // DATABASE MSSQL ---------------------- SELECT / INSERT / UPDATE / DELETE
 
@@ -31,7 +30,7 @@ namespace ApplicationBDO.Controllers
             var selectCompany = dbSQL.CompanyModels.ToList();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -39,8 +38,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -61,7 +61,7 @@ namespace ApplicationBDO.Controllers
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -69,8 +69,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -95,7 +96,7 @@ namespace ApplicationBDO.Controllers
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -103,8 +104,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -126,7 +128,7 @@ namespace ApplicationBDO.Controllers
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -134,8 +136,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);

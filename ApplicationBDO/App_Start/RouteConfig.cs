@@ -16,7 +16,7 @@ namespace ApplicationBDO
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "CompanyLoad", action = "IndexLoadApiToFile", id = UrlParameter.Optional }
+                defaults: new { controller = "CompanyLoad", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

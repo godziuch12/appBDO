@@ -21,7 +21,6 @@ namespace ApplicationBDO.Controllers
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
         private MongoDBContext dbNoSQL = new MongoDBContext();
         private IMongoCollection<CompanyMongoModels> companyCollection;
-        private int numberOfRecrds = 100000;
 
         public CompanyNoSQLController()
         {
@@ -35,18 +34,18 @@ namespace ApplicationBDO.Controllers
             return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL").ToList());
         }
 
-        public async Task<ActionResult> Select()
+        public ActionResult Select()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompany = await companyCollection.Find(f => true).ToListAsync();
+            var selectCompany = companyCollection.Find(f => true);
 
             dbSQL.SaveChanges();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -54,8 +53,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -91,7 +91,7 @@ namespace ApplicationBDO.Controllers
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -99,8 +99,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = 1000;
-            logs.NumberOfFieldsModel = 1;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -109,19 +110,19 @@ namespace ApplicationBDO.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> Update()
+        public ActionResult Update()
         {   
             var update = Builders<CompanyMongoModels>.Update.Set(s => s.Country, "Anglia");
 
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            await companyCollection.UpdateManyAsync( _ => true, update);
+            companyCollection.UpdateMany( _ => true, update);
 
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -129,8 +130,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
@@ -139,17 +141,17 @@ namespace ApplicationBDO.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> Delete()
+        public ActionResult Delete()
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
-
-            await companyCollection.DeleteManyAsync(_ => true);
+            
+            companyCollection.DeleteMany(_ => true);
 
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
-            var timeLog = timeTaken.ToString(@"m\:ss\.fff");
+            var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
@@ -157,8 +159,9 @@ namespace ApplicationBDO.Controllers
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
-            logs.NumberOfRecords = numberOfRecrds;
-            logs.NumberOfFieldsModel = 10;
+            logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
+            logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
+            logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
 
             dbSQL.LogModels.Add(logs);
