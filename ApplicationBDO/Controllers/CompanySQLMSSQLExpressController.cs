@@ -11,7 +11,7 @@ using ApplicationBDO.Models;
 
 namespace ApplicationBDO.Controllers
 {
-    public class CompanySQLController : Controller
+    public class CompanySQLMSSQLExpressController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
 
@@ -19,7 +19,7 @@ namespace ApplicationBDO.Controllers
 
         public ActionResult Index()
         {
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL").ToList());
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-MSSQLExpress").ToList());
         }
 
         public ActionResult Select()
@@ -34,7 +34,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
@@ -42,6 +42,8 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -65,7 +67,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
@@ -73,6 +75,8 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -100,7 +104,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
@@ -108,6 +112,8 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -132,7 +138,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
@@ -140,6 +146,8 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -153,22 +161,15 @@ namespace ApplicationBDO.Controllers
             T objectOut = default(T);
             try
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(@"C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml");
-                string xmlString = xmlDocument.OuterXml;
-                using (StringReader read = new StringReader(xmlString))
+                using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))
                 {
-                    Type outType = typeof(T);
-                    XmlSerializer serializer = new XmlSerializer(outType);
-                    using (XmlReader reader = new XmlTextReader(read))
-                    {
-                        objectOut = (T)serializer.Deserialize(reader);
-                    }
+                    var Deserializer = new XmlSerializer(typeof(T));
+                    return (T)Deserializer.Deserialize(FStream);
                 }
             }
             catch (Exception ex)
             {
-                //Log exception here
+                throw ex;
             }
 
             return objectOut;

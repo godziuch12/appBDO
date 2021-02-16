@@ -3,35 +3,32 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
 using MongoDB.Driver;
+using Raven.Client.Documents;
 
 namespace ApplicationBDO.Controllers
 {
     [Authorize]
-    public class CompanyNoSQLController : Controller
+    public class CompanyNoSQLRavenDBController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
         private MongoDBContext dbNoSQL = new MongoDBContext();
-        private IMongoCollection<CompanyMongoModels> companyCollection;
+        private IMongoCollection<CompanyModels> companyCollection;
 
-        public CompanyNoSQLController()
+        public CompanyNoSQLRavenDBController()
         {
-            companyCollection = dbNoSQL.database.GetCollection<CompanyMongoModels>("Company");
+            companyCollection = dbNoSQL.database.GetCollection<CompanyModels>("Company");
         }
 
-        // DATABASE MONGODB ---------------------- SELECT / INSERT / UPDATE / DELETE
+        // DATABASE RAVENDB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
         {
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL").ToList());
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL-RavenDB").ToList());
         }
 
         public ActionResult Select()
@@ -39,7 +36,20 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompany = companyCollection.Find(f => true);
+            using (var documentStore = new DocumentStore
+            {
+                Urls = new[] { "http://localhost:8080/" },
+                Database = "appBDO"
+            })
+            {
+                documentStore.Initialize();
+                {
+                    using (var session = documentStore.OpenSession())
+                    {
+                        var selectCompany = session.Query<CompanyModels>().ToArray();
+                    }
+                }
+            }
 
             dbSQL.SaveChanges();
             timerSQL.Stop();
@@ -49,14 +59,16 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL";
+            logs.Database = "NoSQL-RavenDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -71,21 +83,36 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            foreach (var item in collectionCompanyFromFile)
+            using (var documentStore = new DocumentStore
             {
-                companyCollection.InsertOne(new CompanyMongoModels
+                Urls = new[] { "http://localhost:8080/" },
+                Database = "appBDO"
+            })
+            {
+                documentStore.Initialize();
                 {
-                    Id = item.Id,
-                    CompanyId = item.CompanyId,
-                    Address = item.Address,
-                    NIP = item.NIP,
-                    Country = item.Country,
-                    PostalCode = item.PostalCode,
-                    RegistrationNumber = item.RegistrationNumber,
-                    Pesel = item.Pesel,
-                    Teryt = item.Teryt,
-                    Name = item.Name
-                });
+                    using (var session = documentStore.OpenSession())
+                    {
+                        foreach (var item in collectionCompanyFromFile)
+                        {
+                            session.Store(new CompanyModels()
+                            {
+                                Id = item.Id,
+                                CompanyId = item.CompanyId,
+                                Address = item.Address,
+                                NIP = item.NIP,
+                                Country = item.Country,
+                                PostalCode = item.PostalCode,
+                                RegistrationNumber = item.RegistrationNumber,
+                                Pesel = item.Pesel,
+                                Teryt = item.Teryt,
+                                Name = item.Name
+                            });
+                        }
+
+                        session.SaveChanges();
+                    }
+                }
             }
 
             timerSQL.Stop();
@@ -95,14 +122,17 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL";
+            logs.Database = "NoSQL-RavenDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
+
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -111,13 +141,28 @@ namespace ApplicationBDO.Controllers
         }
 
         public ActionResult Update()
-        {   
-            var update = Builders<CompanyMongoModels>.Update.Set(s => s.Country, "Anglia");
-
+        {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            companyCollection.UpdateMany( _ => true, update);
+            using (var documentStore = new DocumentStore
+            {
+                Urls = new[] { "http://localhost:8080/" },
+                Database = "appBDO"
+            })
+            {
+                documentStore.Initialize();
+                {
+                    using (var session = documentStore.OpenSession())
+                    {
+                        var companyUpdate = session.Load<CompanyModels>("country/Polska");
+
+                        companyUpdate.Country = "Niemcy";
+
+                        session.SaveChanges();
+                    }
+                }
+            }
 
             timerSQL.Stop();
 
@@ -126,14 +171,16 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL";
+            logs.Database = "NoSQL-RavenDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -145,8 +192,24 @@ namespace ApplicationBDO.Controllers
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
-            
-            companyCollection.DeleteMany(_ => true);
+
+            using (var documentStore = new DocumentStore
+            {
+                Urls = new[] { "http://localhost:8080/" },
+                Database = "appBDO"
+            })
+            {
+                documentStore.Initialize();
+                {
+                    using (var session = documentStore.OpenSession())
+                    {
+                        var selectCompany = session.Query<CompanyModels>().ToArray();
+
+                        session.Delete(selectCompany);
+                        session.SaveChanges();
+                    }
+                }
+            }
 
             timerSQL.Stop();
 
@@ -155,7 +218,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL";
+            logs.Database = "NoSQL-RavenDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
@@ -170,29 +233,21 @@ namespace ApplicationBDO.Controllers
             return RedirectToAction("Index");
         }
 
-
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
             T objectOut = default(T);
             try
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(@"C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml");
-                string xmlString = xmlDocument.OuterXml;
-                using (StringReader read = new StringReader(xmlString))
+                using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))
                 {
-                    Type outType = typeof(T);
-                    XmlSerializer serializer = new XmlSerializer(outType);
-                    using (XmlReader reader = new XmlTextReader(read))
-                    {
-                        objectOut = (T)serializer.Deserialize(reader);
-                    }
+                    var Deserializer = new XmlSerializer(typeof(T));
+                    return (T)Deserializer.Deserialize(FStream);
                 }
             }
             catch (Exception ex)
             {
-                //Log exception here
+                throw ex;
             }
 
             return objectOut;

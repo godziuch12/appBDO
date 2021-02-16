@@ -69,7 +69,7 @@ namespace ApplicationBDO.Controllers
         {
             return new CompanyModels()
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 CompanyId = companyList.CompanyId,
                 Address = companyList.Address,
                 NIP = companyList.Nip,
@@ -98,9 +98,8 @@ namespace ApplicationBDO.Controllers
             }
             catch (Exception ex)
             {
-                //Log exception here
+                throw ex;
             }
-            return 0;
         }
 
         public Configuration Configuration()

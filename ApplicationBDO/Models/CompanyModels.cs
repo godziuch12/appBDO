@@ -6,7 +6,7 @@ namespace ApplicationBDO.Models
     [Table("Company")]
     public class CompanyModels
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string CompanyId { get; set; }
         public string RegistrationNumber { get; set; }
         public string Name { get; set; }

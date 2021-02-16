@@ -11,10 +11,10 @@
                 <div class="jarviswidget jarviswidget-color-orange2" id="wid-id-1" data-widget-editbutton="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <a href="@Url.Action("Delete", "CompanyNoSQL")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Delete"><i class="fa fa-plus"></i> DELETE </a>
-                        <a href="@Url.Action("Update", "CompanyNoSQL")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Update"><i class="fa fa-plus"></i> UPDATE </a>
-                        <a href="@Url.Action("Select", "CompanyNoSQL")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Select"><i class="fa fa-plus"></i> SELECT </a>
-                        <a href="@Url.Action("Insert", "CompanyNoSQL")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Insert"><i class="fa fa-plus"></i> INSERT </a>
+                        <a href="@Url.Action("Delete", "CompanySQLMSSQLExpress")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Delete"><i class="fa fa-plus"></i> DELETE </a>
+                        <a href="@Url.Action("Update", "CompanySQLMSSQLExpress")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Update"><i class="fa fa-plus"></i> UPDATE </a>
+                        <a href="@Url.Action("Select", "CompanySQLMSSQLExpress")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Select"><i class="fa fa-plus"></i> SELECT </a>
+                        <a href="@Url.Action("Insert", "CompanySQLMSSQLExpress")" class="btn bg-color-orange2 txt-color-white float-right" rel="tooltip" data-original-title="Insert"><i class="fa fa-plus"></i> INSERT </a>
                     </header>
                     <div>
                         <div class="jarviswidget-editbox">
@@ -40,6 +40,15 @@
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.NumberOfFieldsModel)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.NoTracing)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.SizeFile)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.BulkLoading)
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.EntityFramework)
@@ -68,6 +77,15 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.NumberOfFieldsModel)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.NoTracing)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SizeFile)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BulkLoading)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.EntityFramework)
