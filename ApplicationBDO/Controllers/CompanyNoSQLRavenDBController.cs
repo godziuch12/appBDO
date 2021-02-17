@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
+using LiteDB;
 using MongoDB.Driver;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 
 namespace ApplicationBDO.Controllers
 {
@@ -16,13 +19,6 @@ namespace ApplicationBDO.Controllers
     public class CompanyNoSQLRavenDBController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private MongoDBContext dbNoSQL = new MongoDBContext();
-        private IMongoCollection<CompanyModels> companyCollection;
-
-        public CompanyNoSQLRavenDBController()
-        {
-            companyCollection = dbNoSQL.database.GetCollection<CompanyModels>("Company");
-        }
 
         // DATABASE RAVENDB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
@@ -83,6 +79,10 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
+            int numberOfDocumentsPerSession = 1024;  // Chunk size
+
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+
             using (var documentStore = new DocumentStore
             {
                 Urls = new[] { "http://localhost:8080/" },
@@ -93,24 +93,27 @@ namespace ApplicationBDO.Controllers
                 {
                     using (var session = documentStore.OpenSession())
                     {
-                        foreach (var item in collectionCompanyFromFile)
+                        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
+                        //for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+                        //{
+                        //    objectListInChunks.Add(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
+                        //}
+
+                        //Parallel.ForEach(objectListInChunks, listOfObjects =>
+                        //{
+
+                        //    listOfObjects.ForEach(x => session.Store(x));
+                        //    session.SaveChanges();
+                        //});
+
+                        for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
                         {
-                            session.Store(new CompanyModels()
-                            {
-                                Id = item.Id,
-                                CompanyId = item.CompanyId,
-                                Address = item.Address,
-                                NIP = item.NIP,
-                                Country = item.Country,
-                                PostalCode = item.PostalCode,
-                                RegistrationNumber = item.RegistrationNumber,
-                                Pesel = item.Pesel,
-                                Teryt = item.Teryt,
-                                Name = item.Name
-                            });
+                            objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
+                            objectListInChunks.ForEach(x => session.Store(x));
+                            session.SaveChanges();
+                            objectListInChunks.Clear();
                         }
 
-                        session.SaveChanges();
                     }
                 }
             }

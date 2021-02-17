@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace ApplicationBDO.Controllers
 {
@@ -27,7 +28,7 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompany = dbSQL.CompanyModels.ToList();
+            var selectCompany = dbSQL.CompanyModels;
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
@@ -56,10 +57,20 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var insertCompany = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
-            dbSQL.CompanyModels.AddRange(insertCompany);
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            dbSQL.SaveChanges();
+            for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+            {
+                objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession));
+                dbSQL.CompanyModels.AddRange(objectListInChunks);
+                dbSQL.SaveChanges();
+                dbSQL.Dispose();
+                dbSQL = new ApplicationDbContext();
+                objectListInChunks.Clear();
+            }
+
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -89,11 +100,16 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var updateCompany = dbSQL.CompanyModels.ToList();
-            foreach (var company in updateCompany)
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            var selectCompany = dbSQL.CompanyModels.OrderBy(m=>m.Country);
+            var countCompany = dbSQL.CompanyModels.Count();
+            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
             {
-                company.Country = "Niemcy";
-                dbSQL.Entry(company).State = EntityState.Modified;
+                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
+                objectListInChunks.ForEach(m => m.Country = "Niemcy");
+                dbSQL.SaveChanges();
+                objectListInChunks.Clear();
             }
 
             dbSQL.SaveChanges();
@@ -126,11 +142,18 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var deleteCompany = dbSQL.CompanyModels.ToList();
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            var selectCompany = dbSQL.CompanyModels.OrderBy(m => m.Country);
+            var countCompany = dbSQL.CompanyModels.Count();
+            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            {
+                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
+                dbSQL.CompanyModels.RemoveRange(objectListInChunks);
+                dbSQL.SaveChanges();
+                objectListInChunks.Clear();
+            }
 
-            dbSQL.CompanyModels.RemoveRange(deleteCompany);
-
-            dbSQL.SaveChanges();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;

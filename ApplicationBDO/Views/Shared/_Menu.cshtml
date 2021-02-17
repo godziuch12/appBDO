@@ -38,6 +38,14 @@
                 </ul>
             </li>
             <li>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-users"></i> <span class="menu-item-parent">NoSql-LiteDB</span></a>
+                <ul style="@Html.MenuChildOpenIf("CompanyNoSQLLiteDB")">
+                    <li>
+                        <a href="@Url.Action("Index", "CompanyNoSQLLiteDB")"><i class="fa fa-lg fa-fw fa-file-code-o"></i> <span class="menu-item-parent">Load file</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li>
                 <a href="@Url.Action("ChangePassword", "Manage")"> <i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Change password</span></a>
             </li>
         </ul>
