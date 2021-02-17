@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
 using MongoDB.Driver;
@@ -178,7 +177,6 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-            T objectOut = default(T);
 
             try
             {

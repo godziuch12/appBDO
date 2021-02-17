@@ -6,20 +6,33 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using Raven.Client.Documents;
+using MySql.Data.MySqlClient;
 
 namespace ApplicationBDO.Controllers
 {
-    [Authorize]
-    public class CompanyNoSQLRavenDBController : Controller
+    public class CompanySQLMySQLController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
+        private ApplicationDbContextMySQL dbMySQL = new ApplicationDbContextMySQL();
 
-        // DATABASE RAVENDB ---------------------- SELECT / INSERT / UPDATE / DELETE
-
+        // DATABASE MySQL ---------------------- SELECT / INSERT / UPDATE / DELETE
+        private MySqlConnection connection;
+        public CompanySQLMySQLController()
+        {
+            connection = new MySqlConnection("data source=localhost; port=3306; initial catalog=appBDO; username=root;password=;SslMode=none");
+            connection.Open();
+        }
         public ActionResult Index()
         {
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL-RavenDB").ToList());
+            //var company = new CompanyModels()
+            //{
+            //    Country = "Niemcy"
+            //};
+
+            //dbMySQL.CompanyModels.Add(company);
+            //dbMySQL.SaveChanges();
+
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-MySQL").ToList());
         }
 
         public ActionResult Select()
@@ -27,37 +40,24 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            using (var documentStore = new DocumentStore
-            {
-                Urls = new[] { "http://localhost:8080/" },
-                Database = "appBDO"
-            })
-            {
-                documentStore.Initialize();
-                {
-                    using (var session = documentStore.OpenSession())
-                    {
-                        var selectCompany = session.Query<CompanyModels>().ToArray();
-                    }
-                }
-            }
+            string sql = "SELECT * FROM Company";
 
-            dbSQL.SaveChanges();
-            timerSQL.Stop();
+            MySqlCommand mySqlCmd = new MySqlCommand(sql, connection);
+            var rdr = mySqlCmd.ExecuteReader();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL-RavenDB";
+            logs.Database = "SQL-MySQL";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = false;
+            logs.EntityFramework = true;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -74,45 +74,16 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            int numberOfDocumentsPerSession = 1024;  // Chunk size
-
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
-
-            using (var documentStore = new DocumentStore
+            foreach (var item in collectionCompanyFromFile)
             {
-                Urls = new[] { "http://localhost:8080/" },
-                Database = "appBDO"
-            })
-            {
-                documentStore.Initialize();
-                {
-                    using (var session = documentStore.OpenSession())
-                    {
-                        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
-                        //for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
-                        //{
-                        //    objectListInChunks.Add(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
-                        //}
-
-                        //Parallel.ForEach(objectListInChunks, listOfObjects =>
-                        //{
-
-                        //    listOfObjects.ForEach(x => session.Store(x));
-                        //    session.SaveChanges();
-                        //});
-
-                        for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
-                        {
-                            objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
-                            objectListInChunks.ForEach(x => session.Store(x));
-                            session.SaveChanges();
-                            objectListInChunks.Clear();
-                        }
-
-                    }
-                }
+                string sql =
+                    "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                    "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+                MySqlCommand mySqlCmd = new MySqlCommand(sql, connection);
+                mySqlCmd.ExecuteNonQuery();
             }
 
+            connection.Close();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -120,17 +91,16 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL-RavenDB";
+            logs.Database = "SQL-MySQL";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = false;
+            logs.EntityFramework = true;
             logs.BulkLoading = false;
             logs.NoTracing = false;
-
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -143,24 +113,9 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            using (var documentStore = new DocumentStore
-            {
-                Urls = new[] { "http://localhost:8080/" },
-                Database = "appBDO"
-            })
-            {
-                documentStore.Initialize();
-                {
-                    using (var session = documentStore.OpenSession())
-                    {
-                        var companyUpdate = session.Load<CompanyModels>("country/Polska");
-
-                        companyUpdate.Country = "Niemcy";
-
-                        session.SaveChanges();
-                    }
-                }
-            }
+            string update = "UPDATE Company SET Country='Niemcy'";
+            MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
+            mySqlCmdUpdate.ExecuteNonQuery();
 
             timerSQL.Stop();
 
@@ -169,14 +124,14 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL-RavenDB";
+            logs.Database = "SQL-MySQL";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = false;
+            logs.EntityFramework = true;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -191,23 +146,9 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            using (var documentStore = new DocumentStore
-            {
-                Urls = new[] { "http://localhost:8080/" },
-                Database = "appBDO"
-            })
-            {
-                documentStore.Initialize();
-                {
-                    using (var session = documentStore.OpenSession())
-                    {
-                        var selectCompany = session.Query<CompanyModels>().ToArray();
-
-                        session.Delete(selectCompany);
-                        session.SaveChanges();
-                    }
-                }
-            }
+            string update = "DELETE FROM Company";
+            MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
+            mySqlCmdUpdate.ExecuteNonQuery();
 
             timerSQL.Stop();
 
@@ -216,7 +157,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "NoSQL-RavenDB";
+            logs.Database = "SQL-MySQL";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
@@ -224,6 +165,8 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
+            logs.BulkLoading = false;
+            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();

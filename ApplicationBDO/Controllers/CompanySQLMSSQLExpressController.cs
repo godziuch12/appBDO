@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Xml;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using Microsoft.Ajax.Utilities;
 
 namespace ApplicationBDO.Controllers
 {
@@ -16,7 +13,7 @@ namespace ApplicationBDO.Controllers
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
 
-        // DATABASE MSSQL ---------------------- SELECT / INSERT / UPDATE / DELETE
+        // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
         {
@@ -181,7 +178,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-            T objectOut = default(T);
+  
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))
@@ -194,8 +191,6 @@ namespace ApplicationBDO.Controllers
             {
                 throw ex;
             }
-
-            return objectOut;
         }
     }
 }

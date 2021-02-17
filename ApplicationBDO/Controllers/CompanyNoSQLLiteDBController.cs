@@ -205,7 +205,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-            T objectOut = default(T);
+  
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))
@@ -218,8 +218,6 @@ namespace ApplicationBDO.Controllers
             {
                 throw ex;
             }
-
-            return objectOut;
         }
     }
 }

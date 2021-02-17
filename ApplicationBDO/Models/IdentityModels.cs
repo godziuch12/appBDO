@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MongoDB.Driver;
+using MySql.Data.EntityFramework;
 
 namespace ApplicationBDO.Models
 {
@@ -55,6 +56,22 @@ namespace ApplicationBDO.Models
 
 
         public virtual DbSet<LogModels> LogModels { get; set; }
+        public virtual DbSet<CompanyModels> CompanyModels { get; set; }
+    }
+
+    [DbConfigurationType(typeof(MySqlEFConfiguration))]
+    public class ApplicationDbContextMySQL : DbContext
+    {
+        public ApplicationDbContextMySQL()
+            : base("defaultconnection1")
+        {
+        }
+
+        public static ApplicationDbContextMySQL create()
+        {
+            return new ApplicationDbContextMySQL();
+        }
+
         public virtual DbSet<CompanyModels> CompanyModels { get; set; }
     }
 

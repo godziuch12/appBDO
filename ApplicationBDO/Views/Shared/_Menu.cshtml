@@ -22,6 +22,22 @@
                 </ul>
             </li>
             <li>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Sql-MySQL</span></a>
+                <ul style="@Html.MenuChildOpenIf("CompanySQLMySQL")">
+                    <li>
+                        <a href="@Url.Action("Index", "CompanySQLMySQL")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-user"></i> <span class="menu-item-parent">Sql-SQLite</span></a>
+                <ul style="@Html.MenuChildOpenIf("CompanySQLSQLLite")">
+                    <li>
+                        <a href="@Url.Action("Index", "CompanySQLSQLite")"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Load file</span></a>
+                    </li>
+                </ul>
+            </li>
+            <li>
                 <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-fw fa-users"></i> <span class="menu-item-parent">NoSql-MongoDB</span></a>
                 <ul style="@Html.MenuChildOpenIf("CompanyNoSQLMongoDB")">
                     <li>
