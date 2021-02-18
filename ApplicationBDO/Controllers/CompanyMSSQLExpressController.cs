@@ -6,33 +6,18 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using MySql.Data.MySqlClient;
 
 namespace ApplicationBDO.Controllers
 {
-    public class CompanySQLMySQLController : Controller
+    public class CompanyMSSQLExpressController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private ApplicationDbContextMySQL dbMySQL = new ApplicationDbContextMySQL();
 
-        // DATABASE MySQL ---------------------- SELECT / INSERT / UPDATE / DELETE
-        private MySqlConnection connection;
-        public CompanySQLMySQLController()
-        {
-            connection = new MySqlConnection("data source=localhost; port=3306; initial catalog=appBDO; username=root;password=;SslMode=none");
-            connection.Open();
-        }
+        // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE
+
         public ActionResult Index()
         {
-            //var company = new CompanyModels()
-            //{
-            //    Country = "Niemcy"
-            //};
-
-            //dbMySQL.CompanyModels.Add(company);
-            //dbMySQL.SaveChanges();
-
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-MySQL").ToList());
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-MSSQLExpress").ToList());
         }
 
         public ActionResult Select()
@@ -40,17 +25,14 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sql = "SELECT * FROM Company";
-
-            MySqlCommand mySqlCmd = new MySqlCommand(sql, connection);
-            var rdr = mySqlCmd.ExecuteReader();
+            var result = dbSQL.CompanyModels;
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MySQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
@@ -72,18 +54,20 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            foreach (var item in collectionCompanyFromFile)
+            for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
             {
-                string sql =
-                    "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-                    "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
-                MySqlCommand mySqlCmd = new MySqlCommand(sql, connection);
-                mySqlCmd.ExecuteNonQuery();
+                objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession));
+                dbSQL.CompanyModels.AddRange(objectListInChunks);
+                dbSQL.SaveChanges();
+                dbSQL.Dispose();
+                dbSQL = new ApplicationDbContext();
+                objectListInChunks.Clear();
             }
 
-            connection.Close();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -91,7 +75,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MySQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
@@ -113,10 +97,19 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string update = "UPDATE Company SET Country='Niemcy'";
-            MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
-            mySqlCmdUpdate.ExecuteNonQuery();
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            var selectCompany = dbSQL.CompanyModels.OrderBy(m=>m.Country);
+            var countCompany = dbSQL.CompanyModels.Count();
+            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            {
+                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
+                objectListInChunks.ForEach(m => m.Country = "Niemcy");
+                dbSQL.SaveChanges();
+                objectListInChunks.Clear();
+            }
 
+            dbSQL.SaveChanges();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -124,7 +117,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MySQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
@@ -146,9 +139,17 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string update = "DELETE FROM Company";
-            MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
-            mySqlCmdUpdate.ExecuteNonQuery();
+            int numberOfDocumentsPerSession = 100000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            var selectCompany = dbSQL.CompanyModels.OrderBy(m => m.Country);
+            var countCompany = dbSQL.CompanyModels.Count();
+            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            {
+                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
+                dbSQL.CompanyModels.RemoveRange(objectListInChunks);
+                dbSQL.SaveChanges();
+                objectListInChunks.Clear();
+            }
 
             timerSQL.Stop();
 
@@ -157,7 +158,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MySQL";
+            logs.Database = "SQL-MSSQLExpress";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
@@ -177,7 +178,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-
+  
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))

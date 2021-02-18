@@ -130,6 +130,15 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.113.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -299,11 +308,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CompanyLoadController.cs" />
     <Compile Include="Controllers\CompanyNoSQLRavenDBController.cs" />
-    <Compile Include="Controllers\CompanyNoSQLLiteDBController.cs" />
+    <Compile Include="Controllers\CompanyNoSQLiteDBController.cs" />
     <Compile Include="Controllers\CompanyNoSQLMongoDBController.cs" />
-    <Compile Include="Controllers\CompanySQLSQLiteController.cs" />
-    <Compile Include="Controllers\CompanySQLMySQLController.cs" />
-    <Compile Include="Controllers\CompanySQLMSSQLExpressController.cs" />
+    <Compile Include="Controllers\CompanySQLiteController.cs" />
+    <Compile Include="Controllers\CompanyMySQLController.cs" />
+    <Compile Include="Controllers\CompanyMSSQLExpressController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1111,7 +1120,7 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_TopRight.cshtml" />
     <Content Include="Views\Shared\_Ribbon.cshtml" />
-    <Content Include="Views\CompanySQLMSSQLExpress\Index.cshtml" />
+    <Content Include="Views\CompanyMSSQLExpress\Index.cshtml" />
     <Content Include="Views\CompanyNoSQLMongoDB\Index.cshtml" />
     <Content Include="Scripts\libs\jquery-2.1.1.min.map" />
     <Content Include="Scripts\plugin\bootstrap-tags\dist\bootstrap-tagsinput.min.js.map" />
@@ -1136,9 +1145,9 @@
     <None Include="packages.config" />
     <Content Include="Views\CompanyLoad\Index.cshtml" />
     <Content Include="Views\CompanyNoSQLRavenDB\Index.cshtml" />
-    <Content Include="Views\CompanyNoSQLLiteDB\Index.cshtml" />
-    <Content Include="Views\CompanySQLMySQL\Index.cshtml" />
-    <Content Include="Views\CompanySQLSQLite\Index.cshtml" />
+    <Content Include="Views\CompanyNoSQLiteDB\Index.cshtml" />
+    <Content Include="Views\CompanyMySQL\Index.cshtml" />
+    <Content Include="Views\CompanySQLite\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
@@ -1208,9 +1217,11 @@
     <Error Condition="!Exists('..\packages\MongoDB.Libmongocrypt.1.0.0\build\MongoDB.Libmongocrypt.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MongoDB.Libmongocrypt.1.0.0\build\MongoDB.Libmongocrypt.targets'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
   </Target>
   <Import Project="..\packages\MongoDB.Libmongocrypt.1.0.0\build\MongoDB.Libmongocrypt.targets" Condition="Exists('..\packages\MongoDB.Libmongocrypt.1.0.0\build\MongoDB.Libmongocrypt.targets')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

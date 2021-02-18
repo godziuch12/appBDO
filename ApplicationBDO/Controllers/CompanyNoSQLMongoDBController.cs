@@ -34,7 +34,7 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompany = companyCollection.Find(f => true);
+            var result = companyCollection.Find(f => true);
 
             dbSQL.SaveChanges();
             timerSQL.Stop();
@@ -110,12 +110,11 @@ namespace ApplicationBDO.Controllers
         }
 
         public ActionResult Update()
-        {   
-            var update = Builders<CompanyModels>.Update.Set(s => s.Country, "Niemcy");
-
+        {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
+            var update = Builders<CompanyModels>.Update.Set(s => s.Country, "Niemcy");
             companyCollection.UpdateMany( _ => true, update);
 
             timerSQL.Stop();

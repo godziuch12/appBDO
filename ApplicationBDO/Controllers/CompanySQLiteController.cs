@@ -6,18 +6,20 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
+using System.Data.SQLite;
 
 namespace ApplicationBDO.Controllers
 {
-    public class CompanySQLMSSQLExpressController : Controller
+    public class CompanySQLiteController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
+        private string _connectionString = "Data source=C:\\Users\\adria\\OneDrive\\Pulpit\\sqlite.db";
 
-        // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE
+        // DATABASE SQLLite ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
         {
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-MSSQLExpress").ToList());
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQL-SQLite").ToList());
         }
 
         public ActionResult Select()
@@ -25,21 +27,28 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var selectCompany = dbSQL.CompanyModels;
+            string sqlSelect = "SELECT * FROM Company";
+
+            using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                SQLiteCommand mySqlCmd = new SQLiteCommand(sqlSelect, sqlConnection);
+                var result = mySqlCmd.ExecuteReader();
+            }
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MSSQLExpress";
+            logs.Database = "SQL-SQLite";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -54,18 +63,19 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+            using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
-                objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession));
-                dbSQL.CompanyModels.AddRange(objectListInChunks);
-                dbSQL.SaveChanges();
-                dbSQL.Dispose();
-                dbSQL = new ApplicationDbContext();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                                   "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+                    SQLiteCommand sqlCmd = new SQLiteCommand(query, sqlConnection);
+                    sqlCmd.ExecuteNonQuery();
+                }
             }
 
             timerSQL.Stop();
@@ -75,14 +85,14 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MSSQLExpress";
+            logs.Database = "SQL-SQLite";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -97,19 +107,14 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
-            var selectCompany = dbSQL.CompanyModels.OrderBy(m=>m.Country);
-            var countCompany = dbSQL.CompanyModels.Count();
-            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
+            using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
-                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
-                objectListInChunks.ForEach(m => m.Country = "Niemcy");
-                dbSQL.SaveChanges();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                SQLiteCommand mySqlCmd = new SQLiteCommand(sqlUpdate, sqlConnection);
+                mySqlCmd.ExecuteNonQuery();
             }
 
-            dbSQL.SaveChanges();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -117,14 +122,14 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MSSQLExpress";
+            logs.Database = "SQL-SQLite";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -139,16 +144,12 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
-            var selectCompany = dbSQL.CompanyModels.OrderBy(m => m.Country);
-            var countCompany = dbSQL.CompanyModels.Count();
-            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            string sqlDelete = "DELETE FROM Company";
+            using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
-                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
-                dbSQL.CompanyModels.RemoveRange(objectListInChunks);
-                dbSQL.SaveChanges();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                SQLiteCommand mySqlCmd = new SQLiteCommand(sqlDelete, sqlConnection);
+                mySqlCmd.ExecuteNonQuery();
             }
 
             timerSQL.Stop();
@@ -158,14 +159,14 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQL-MSSQLExpress";
+            logs.Database = "SQL-SQLite";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -178,7 +179,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-  
+
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))

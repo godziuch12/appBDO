@@ -6,30 +6,22 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
-using System.Data.SqlClient;
+using LiteDB;
+using MongoDB.Driver;
 
 namespace ApplicationBDO.Controllers
 {
-    public class CompanySQLSQLiteController : Controller
+    [Authorize]
+    public class CompanyNoSQLiteDBController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
+        private string _connestionString = @"C:\Temp\MyDataLiteSQL.db";
 
-        private string connectionString = "Data Source=sqlite.db";
-
-        // DATABASE SQLLite ---------------------- SELECT / INSERT / UPDATE / DELETE
+        // DATABASE LITEDB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
         {
-            using (SqlConnection sqlCon = new SqlConnection(connectionString))
-            {
-                sqlCon.Open();
-                string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-                               "VALUES ('test','test1','test2','test3','test4,'test5','test6','test7','test8','test9')";
-
-                SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                sqlCmd.ExecuteNonQuery();
-            }
-            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "SQLite").ToList());
+            return View(dbSQL.LogModels.Where(m => (m.OperationName == "SELECT" || m.OperationName == "INSERT" || m.OperationName == "UPDATE" || m.OperationName == "DELETE") && m.Database == "NoSQL-LiteDB").ToList());
         }
 
         public ActionResult Select()
@@ -37,24 +29,29 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sql = "SELECT * FROM Company";
+            using (var dbNoSQL = new LiteDatabase(_connestionString))
+            {
+                var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
 
-            //MySqlCommand mySqlCmd = new MySqlCommand(sql, connection);
-            //var rdr = mySqlCmd.ExecuteReader();
+                var result = companyCollection.Find(f => true);
+            }
+
+            dbSQL.SaveChanges();
+            timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQLite";
+            logs.Database = "NoSQL-LiteDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "SELECT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -71,16 +68,28 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            //foreach (var item in collectionCompanyFromFile)
-            //{
-            //    string sql =
-            //        "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-            //        "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
-            //    MySqlCommand mySqlCmd = new MySqlCommand(sql, connectionString);
-            //    mySqlCmd.ExecuteNonQuery();
-            //}
+            using (var dbNoSQL = new LiteDatabase(_connestionString))
+            {
+                var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
 
-            //connection.Close();
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    companyCollection.Insert(new CompanyModels
+                    {
+                        Id = item.Id,
+                        CompanyId = item.CompanyId,
+                        Address = item.Address,
+                        NIP = item.NIP,
+                        Country = item.Country,
+                        PostalCode = item.PostalCode,
+                        RegistrationNumber = item.RegistrationNumber,
+                        Pesel = item.Pesel,
+                        Teryt = item.Teryt,
+                        Name = item.Name
+                    });
+                }
+            }
+
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -88,16 +97,17 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQLite";
+            logs.Database = "NoSQL-LiteDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "INSERT";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
+
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -107,12 +117,32 @@ namespace ApplicationBDO.Controllers
 
         public ActionResult Update()
         {
+            var update = Builders<CompanyModels>.Update.Set(s => s.Country, "Niemcy");
+            int numberOfDocumentsPerSession = 10000;
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            //string update = "UPDATE Company SET Country='Niemcy'";
-            //MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
-            //mySqlCmdUpdate.ExecuteNonQuery();
+            using (var dbNoSQL = new LiteDatabase(_connestionString))
+            {
+                var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
+
+                var selectCompany = companyCollection.Find(f => true);
+                var selectCompanyCount = companyCollection.Find(f => true).Count();
+                for (int i = 0; i < selectCompanyCount; i += numberOfDocumentsPerSession)
+                {
+                    var selectSkip = selectCompany.Skip(i).Take(numberOfDocumentsPerSession);
+                    objectListInChunks.AddRange(selectSkip);
+
+                    foreach (var item in objectListInChunks)
+                    {
+                        item.Country = "Niemcy";
+                        companyCollection.Update(item);
+                    }
+                    objectListInChunks.Clear();
+                }
+            }
 
             timerSQL.Stop();
 
@@ -121,14 +151,14 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQLite";
+            logs.Database = "NoSQL-LiteDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "UPDATE";
             logs.NameAPI = "SearchCompany";
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -143,9 +173,12 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            //string update = "DELETE FROM Company";
-            //MySqlCommand mySqlCmdUpdate = new MySqlCommand(update, connection);
-            //mySqlCmdUpdate.ExecuteNonQuery();
+            using (var dbNoSQL = new LiteDatabase(_connestionString))
+            {
+                var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
+
+                companyCollection.DeleteMany(_ => true);
+            }
 
             timerSQL.Stop();
 
@@ -154,7 +187,7 @@ namespace ApplicationBDO.Controllers
 
             var logs = new LogModels();
             logs.OperationDate = DateTime.Now;
-            logs.Database = "SQLite";
+            logs.Database = "NoSQL-LiteDB";
             logs.OperationTime = timeLog;
             logs.OperationName = "DELETE";
             logs.NameAPI = "SearchCompany";
@@ -162,8 +195,6 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
             logs.EntityFramework = true;
-            logs.BulkLoading = false;
-            logs.NoTracing = false;
 
             dbSQL.LogModels.Add(logs);
             dbSQL.SaveChanges();
@@ -174,7 +205,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-
+  
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))
