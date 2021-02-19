@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace ApplicationBDO.Controllers
     public class CompanyMSSQLExpressController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-
+        private string _connectionString = "data source=DESKTOP-4I4A5QQ\\SQLEXPRESS;initial catalog=ApplicationBDO;Integrated Security=SSPI;persist security info=True;";
         // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE
 
         public ActionResult Index()
@@ -25,7 +26,15 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var result = dbSQL.CompanyModels;
+            string sqlSelect = "SELECT * FROM Company";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                SqlCommand sqlCmd = new SqlCommand(sqlSelect, sqlConnection);
+                var result = sqlCmd.ExecuteReader();
+            }
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
@@ -39,7 +48,7 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -54,18 +63,21 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession));
-                dbSQL.CompanyModels.AddRange(objectListInChunks);
-                dbSQL.SaveChanges();
-                dbSQL.Dispose();
-                dbSQL = new ApplicationDbContext();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                                        "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" +
+                                        item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
+                                        item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+                    SqlCommand sqlCmd = new SqlCommand(sqlInsert, sqlConnection);
+                    sqlCmd.ExecuteNonQuery();
+                }
             }
 
             timerSQL.Stop();
@@ -82,7 +94,7 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -97,19 +109,15 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
-            var selectCompany = dbSQL.CompanyModels.OrderBy(m=>m.Country);
-            var countCompany = dbSQL.CompanyModels.Count();
-            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
-                objectListInChunks.ForEach(m => m.Country = "Niemcy");
-                dbSQL.SaveChanges();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand(sqlUpdate, sqlConnection);
+                sqlCmd.ExecuteNonQuery();
             }
 
-            dbSQL.SaveChanges();
             timerSQL.Stop();
 
             TimeSpan timeTaken = timerSQL.Elapsed;
@@ -124,7 +132,7 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -139,16 +147,13 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            int numberOfDocumentsPerSession = 100000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
-            var selectCompany = dbSQL.CompanyModels.OrderBy(m => m.Country);
-            var countCompany = dbSQL.CompanyModels.Count();
-            for (int i = 0; i < countCompany; i += numberOfDocumentsPerSession)
+            string sqlDelete = "DELETE FROM Company";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                objectListInChunks.AddRange(selectCompany.Skip(i).Take(numberOfDocumentsPerSession));
-                dbSQL.CompanyModels.RemoveRange(objectListInChunks);
-                dbSQL.SaveChanges();
-                objectListInChunks.Clear();
+                sqlConnection.Open();
+                SqlCommand sqlCmd = new SqlCommand(sqlDelete, sqlConnection);
+                sqlCmd.ExecuteNonQuery();
             }
 
             timerSQL.Stop();
@@ -165,7 +170,7 @@ namespace ApplicationBDO.Controllers
             logs.NumberOfRecords = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfRecords;
             logs.NumberOfFieldsModel = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").NumberOfFieldsModel;
             logs.SizeFile = dbSQL.LogModels.FirstOrDefault(m => m.OperationName == "LOAD").SizeFile;
-            logs.EntityFramework = true;
+            logs.EntityFramework = false;
             logs.BulkLoading = false;
             logs.NoTracing = false;
 
@@ -178,7 +183,7 @@ namespace ApplicationBDO.Controllers
         public T DeSerializeObject<T>(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { return default(T); }
-  
+
             try
             {
                 using (FileStream FStream = new FileStream("C://Users//adria//OneDrive//Pulpit//SerializationOverview.xml", FileMode.Open))

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
+using Microsoft.Ajax.Utilities;
 using Raven.Client.Documents;
 
 namespace ApplicationBDO.Controllers
@@ -37,7 +38,7 @@ namespace ApplicationBDO.Controllers
                 {
                     using (var session = documentStore.OpenSession())
                     {
-                        var selectCompany = session.Query<CompanyModels>().ToArray();
+                        var result = session.Query<CompanyModels>();
                     }
                 }
             }
@@ -74,7 +75,7 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            int numberOfDocumentsPerSession = 1024;  // Chunk size
+            int numberOfDocumentsPerSession = 10000;
 
             List<CompanyModels> objectListInChunks = new List<CompanyModels>();
 
@@ -86,29 +87,16 @@ namespace ApplicationBDO.Controllers
             {
                 documentStore.Initialize();
                 {
-                    using (var session = documentStore.OpenSession())
+                    for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
                     {
-                        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
-                        //for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
-                        //{
-                        //    objectListInChunks.Add(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
-                        //}
-
-                        //Parallel.ForEach(objectListInChunks, listOfObjects =>
-                        //{
-
-                        //    listOfObjects.ForEach(x => session.Store(x));
-                        //    session.SaveChanges();
-                        //});
-
-                        for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+                        using (var session = documentStore.OpenSession())
                         {
-                            objectListInChunks.AddRange(collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession).ToList());
-                            objectListInChunks.ForEach(x => session.Store(x));
+                            session.Advanced.MaxNumberOfRequestsPerSession = 1000;
+                            var skipCollection = collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession);
+                            skipCollection.ForEach(x => session.Store(x));
                             session.SaveChanges();
-                            objectListInChunks.Clear();
+                            session.Advanced.Clear();
                         }
-
                     }
                 }
             }
@@ -143,6 +131,8 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
+            int numberOfDocumentsPerSession = 10000;
+
             using (var documentStore = new DocumentStore
             {
                 Urls = new[] { "http://localhost:8080/" },
@@ -151,13 +141,21 @@ namespace ApplicationBDO.Controllers
             {
                 documentStore.Initialize();
                 {
-                    using (var session = documentStore.OpenSession())
+                    var sessionCount = documentStore.OpenSession();
+                    var count = sessionCount.Query<CompanyModels>().Count();
+
+                    for (int i = 0; i < count; i += numberOfDocumentsPerSession)
                     {
-                        var companyUpdate = session.Load<CompanyModels>("country/Polska");
-
-                        companyUpdate.Country = "Niemcy";
-
-                        session.SaveChanges();
+                        using (var session = documentStore.OpenSession())
+                        {
+                            session.Advanced.MaxNumberOfRequestsPerSession = 1000;
+                            var skipCollection = session.Query<CompanyModels>().Skip(i).Take(numberOfDocumentsPerSession);
+                            foreach (var item in skipCollection)
+                            {
+                                item.Country = "Niemcy";
+                            }
+                            session.SaveChanges();
+                        }
                     }
                 }
             }
@@ -191,6 +189,8 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
+            int numberOfDocumentsPerSession = 10000;
+
             using (var documentStore = new DocumentStore
             {
                 Urls = new[] { "http://localhost:8080/" },
@@ -199,12 +199,20 @@ namespace ApplicationBDO.Controllers
             {
                 documentStore.Initialize();
                 {
-                    using (var session = documentStore.OpenSession())
-                    {
-                        var selectCompany = session.Query<CompanyModels>().ToArray();
+                    var sessionCount = documentStore.OpenSession();
+                    var count = sessionCount.Query<CompanyModels>().Count();
 
-                        session.Delete(selectCompany);
-                        session.SaveChanges();
+                    for (int i = 0; i < count; i += numberOfDocumentsPerSession)
+                    {
+                        using (var session = documentStore.OpenSession())
+                        {
+                            var skipCollection = session.Query<CompanyModels>().Skip(i).Take(numberOfDocumentsPerSession);
+                            foreach (var item in skipCollection)
+                            {
+                                session.Delete(item);
+                            }
+                            session.SaveChanges();
+                        }
                     }
                 }
             }
