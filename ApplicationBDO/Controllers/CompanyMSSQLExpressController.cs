@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -14,7 +16,7 @@ namespace ApplicationBDO.Controllers
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
         private string _connectionString = "data source=DESKTOP-4I4A5QQ\\SQLEXPRESS;initial catalog=ApplicationBDO;Integrated Security=SSPI;persist security info=True;";
-        // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE
+        // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE}
 
         public ActionResult Index()
         {
@@ -64,21 +66,78 @@ namespace ApplicationBDO.Controllers
             timerSQL.Start();
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+    
+            // BULKING 
+
+            DataTable tbl = new DataTable();
+            tbl.Columns.Add(new DataColumn("Id", typeof(string)));
+            tbl.Columns.Add(new DataColumn("CompanyId", typeof(string)));
+            tbl.Columns.Add(new DataColumn("RegistrationNumber", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Name", typeof(string)));
+            tbl.Columns.Add(new DataColumn("NIP", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Pesel", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Country", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Address", typeof(string)));
+            tbl.Columns.Add(new DataColumn("PostalCode", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Teryt", typeof(string)));
+
+            foreach (var item in collectionCompanyFromFile)
+            {
+                DataRow row = tbl.NewRow();
+
+                row["Id"] = item.Id;
+                row["CompanyId"] = item.CompanyId;
+                row["RegistrationNumber"] = item.RegistrationNumber;
+                row["Name"] = item.Name;
+                row["NIP"] = item.NIP;
+                row["Pesel"] = item.Pesel;
+                row["Country"] = item.Country;
+                row["Address"] = item.Address;
+                row["PostalCode"] = item.PostalCode;
+                row["Teryt"] = item.Teryt;
+
+                tbl.Rows.Add(row);
+            }
 
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
-                foreach (var item in collectionCompanyFromFile)
-                {
-                    string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-                                        "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" +
-                                        item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
-                                        item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
 
-                    SqlCommand sqlCmd = new SqlCommand(sqlInsert, sqlConnection);
-                    sqlCmd.ExecuteNonQuery();
-                }
+                SqlBulkCopy objbulk = new SqlBulkCopy(sqlConnection);
+                objbulk.BulkCopyTimeout = 60;
+
+                objbulk.DestinationTableName = "dbo.Company";
+                objbulk.ColumnMappings.Add("Id", "Id");
+                objbulk.ColumnMappings.Add("CompanyId", "CompanyId");
+                objbulk.ColumnMappings.Add("RegistrationNumber", "RegistrationNumber");
+                objbulk.ColumnMappings.Add("Name", "Name");
+                objbulk.ColumnMappings.Add("NIP", "NIP");
+                objbulk.ColumnMappings.Add("Pesel", "Pesel");
+                objbulk.ColumnMappings.Add("Country", "Country");
+                objbulk.ColumnMappings.Add("Address", "Address");
+                objbulk.ColumnMappings.Add("PostalCode", "PostalCode");
+                objbulk.ColumnMappings.Add("Teryt", "Teryt");
+
+                objbulk.WriteToServer(tbl);
             }
+
+            // WITHOUT BULKING
+
+            //using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            //{
+            //    sqlConnection.Open();
+            //    foreach (var item in collectionCompanyFromFile)
+            //    {
+            //        string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+            //                           "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" +
+            //                           item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
+            //                           item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+            //        SqlCommand sqlCmd = new SqlCommand(sqlInsert, sqlConnection);
+            //        sqlCmd.ExecuteNonQuery();
+            //    }
+            //}
+
 
             timerSQL.Stop();
 

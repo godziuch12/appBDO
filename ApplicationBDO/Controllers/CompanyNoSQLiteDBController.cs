@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -71,22 +72,9 @@ namespace ApplicationBDO.Controllers
             using (var dbNoSQL = new LiteDatabase(_connestionString))
             {
                 var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
-
                 foreach (var item in collectionCompanyFromFile)
                 {
-                    companyCollection.Insert(new CompanyModels
-                    {
-                        Id = item.Id,
-                        CompanyId = item.CompanyId,
-                        Address = item.Address,
-                        NIP = item.NIP,
-                        Country = item.Country,
-                        PostalCode = item.PostalCode,
-                        RegistrationNumber = item.RegistrationNumber,
-                        Pesel = item.Pesel,
-                        Teryt = item.Teryt,
-                        Name = item.Name
-                    });
+                    companyCollection.Insert(item);
                 }
             }
 
@@ -119,7 +107,6 @@ namespace ApplicationBDO.Controllers
         {
             var update = Builders<CompanyModels>.Update.Set(s => s.Country, "Niemcy");
             int numberOfDocumentsPerSession = 10000;
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
 
             var timerSQL = new Stopwatch();
             timerSQL.Start();
@@ -133,14 +120,12 @@ namespace ApplicationBDO.Controllers
                 for (int i = 0; i < selectCompanyCount; i += numberOfDocumentsPerSession)
                 {
                     var selectSkip = selectCompany.Skip(i).Take(numberOfDocumentsPerSession);
-                    objectListInChunks.AddRange(selectSkip);
 
-                    foreach (var item in objectListInChunks)
+                    foreach (var item in selectSkip)
                     {
                         item.Country = "Niemcy";
                         companyCollection.Update(item);
                     }
-                    objectListInChunks.Clear();
                 }
             }
 
