@@ -66,23 +66,26 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+            var collectionCompanyFromFile = DeSerializeObject<IEnumerable<CompanyModels>>("SerializationOverview");
 
             foreach (var item in collectionCompanyFromFile)
             {
-                companyCollection.InsertOne(new CompanyModels
-                {
-                    Id = item.Id,
-                    CompanyId = item.CompanyId,
-                    Address = item.Address,
-                    NIP = item.NIP,
-                    Country = item.Country,
-                    PostalCode = item.PostalCode,
-                    RegistrationNumber = item.RegistrationNumber,
-                    Pesel = item.Pesel,
-                    Teryt = item.Teryt,
-                    Name = item.Name
-                });
+                //companyCollection.BulkWrite(collectionCompanyFromFile);
+                //companyCollection.InsertOne(new CompanyModels
+                //{
+                //    Id = item.Id,
+                //    CompanyId = item.CompanyId,
+                //    Address = item.Address,
+                //    NIP = item.NIP,
+                //    Country = item.Country,
+                //    PostalCode = item.PostalCode,
+                //    RegistrationNumber = item.RegistrationNumber,
+                //    Pesel = item.Pesel,
+                //    Teryt = item.Teryt,
+                //    Name = item.Name
+                //});
+
+                //companyCollection.InsertMany(collectionCompanyFromFile, );
             }
 
             timerSQL.Stop();

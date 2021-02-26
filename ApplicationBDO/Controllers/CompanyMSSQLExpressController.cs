@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -29,6 +30,8 @@ namespace ApplicationBDO.Controllers
             timerSQL.Start();
 
             string sqlSelect = "SELECT * FROM Company";
+
+            var list = dbSQL.CompanyModels;
 
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
