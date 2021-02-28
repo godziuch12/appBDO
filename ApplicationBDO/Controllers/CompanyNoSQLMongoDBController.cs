@@ -36,6 +36,7 @@ namespace ApplicationBDO.Controllers
 
             var result = companyCollection.Find(f => true);
 
+
             dbSQL.SaveChanges();
             timerSQL.Stop();
 
@@ -80,22 +81,22 @@ namespace ApplicationBDO.Controllers
 
             // WITHOUT BULKING
 
-            //foreach (var item in collectionCompanyFromFile)
-            //{
-            //    companyCollection.InsertOne(new CompanyModels
-            //    {
-            //        Id = item.Id,
-            //        CompanyId = item.CompanyId,
-            //        Address = item.Address,
-            //        NIP = item.NIP,
-            //        Country = item.Country,
-            //        PostalCode = item.PostalCode,
-            //        RegistrationNumber = item.RegistrationNumber,
-            //        Pesel = item.Pesel,
-            //        Teryt = item.Teryt,
-            //        Name = item.Name
-            //    });
-            //}
+            foreach (var item in collectionCompanyFromFile)
+            {
+                companyCollection.InsertOne(new CompanyModels
+                {
+                    Id = item.Id,
+                    CompanyId = item.CompanyId,
+                    Address = item.Address,
+                    NIP = item.NIP,
+                    Country = item.Country,
+                    PostalCode = item.PostalCode,
+                    RegistrationNumber = item.RegistrationNumber,
+                    Pesel = item.Pesel,
+                    Teryt = item.Teryt,
+                    Name = item.Name
+                });
+            }
 
             timerSQL.Stop();
 

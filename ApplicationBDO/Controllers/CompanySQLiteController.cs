@@ -27,11 +27,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlSelect = "SELECT * FROM Company";
-
             using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlSelect = "SELECT * FROM Company";
                 SQLiteCommand mySqlCmd = new SQLiteCommand(sqlSelect, sqlConnection);
                 var result = mySqlCmd.ExecuteReader();
                 foreach (var item in result)
@@ -137,10 +137,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
             using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
                 SQLiteCommand mySqlCmd = new SQLiteCommand(sqlUpdate, sqlConnection);
                 mySqlCmd.ExecuteNonQuery();
             }
@@ -174,10 +175,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlDelete = "DELETE FROM Company";
             using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlDelete = "DELETE FROM Company";
                 SQLiteCommand mySqlCmd = new SQLiteCommand(sqlDelete, sqlConnection);
                 mySqlCmd.ExecuteNonQuery();
             }

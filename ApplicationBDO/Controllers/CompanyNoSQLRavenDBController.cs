@@ -40,7 +40,7 @@ namespace ApplicationBDO.Controllers
                 {
                     using (var session = documentStore.OpenSession())
                     {
-                        var result = session.Query<CompanyModels>().AsNoTracking();
+                        var result = session.Query<CompanyModels>();
                         foreach (var item in result)
                         {
                             Console.WriteLine(item);
@@ -81,9 +81,9 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            //int numberOfDocumentsPerSession = 10000;
+            int numberOfDocumentsPerSession = 10000;
 
-            //List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
 
             using (var documentStore = new DocumentStore
             {
