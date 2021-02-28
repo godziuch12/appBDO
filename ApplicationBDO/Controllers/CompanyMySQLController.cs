@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using ApplicationBDO.Models;
@@ -66,18 +69,76 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
+            // BULKING 
+
+            DataTable tbl = new DataTable();
+            tbl.Columns.Add(new DataColumn("Id", typeof(string)));
+            tbl.Columns.Add(new DataColumn("CompanyId", typeof(string)));
+            tbl.Columns.Add(new DataColumn("RegistrationNumber", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Name", typeof(string)));
+            tbl.Columns.Add(new DataColumn("NIP", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Pesel", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Country", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Address", typeof(string)));
+            tbl.Columns.Add(new DataColumn("PostalCode", typeof(string)));
+            tbl.Columns.Add(new DataColumn("Teryt", typeof(string)));
+
+            foreach (var item in collectionCompanyFromFile)
+            {
+                DataRow row = tbl.NewRow();
+
+                row["Id"] = item.Id;
+                row["CompanyId"] = item.CompanyId;
+                row["RegistrationNumber"] = item.RegistrationNumber;
+                row["Name"] = item.Name;
+                row["NIP"] = item.NIP;
+                row["Pesel"] = item.Pesel;
+                row["Country"] = item.Country;
+                row["Address"] = item.Address;
+                row["PostalCode"] = item.PostalCode;
+                row["Teryt"] = item.Teryt;
+
+                tbl.Rows.Add(row);
+            }
+
+            using (var sqlConnection = new MySqlConnection(_connectionString))
             {
                 sqlConnection.Open();
-                foreach (var item in collectionCompanyFromFile)
-                {
-                    string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-                                 "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
 
-                    MySqlCommand mySqlCmd = new MySqlCommand(sqlInsert, sqlConnection);
-                    mySqlCmd.ExecuteNonQuery();
+                using (MySqlTransaction tran = sqlConnection.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand())
+                    {
+                        cmd.Connection = sqlConnection;
+                        cmd.Transaction = tran;
+                        cmd.CommandText = "SELECT * FROM Company";
+                        using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                        {
+                            da.UpdateBatchSize = 1000;
+                            using (MySqlCommandBuilder cb = new MySqlCommandBuilder(da))
+                            {
+                                da.Update(tbl);
+                                tran.Commit();
+                            }
+                        }
+                    }
                 }
             }
+
+            // WITHOUT BULKING
+
+            //using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
+            //{
+            //    sqlConnection.Open();
+            //    foreach (var item in collectionCompanyFromFile)
+            //    {
+            //        string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+            //                     "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+            //        MySqlCommand mySqlCmd = new MySqlCommand(sqlInsert, sqlConnection);
+            //        mySqlCmd.ExecuteNonQuery();
+            //    }
+            //}
 
             timerSQL.Stop();
 
@@ -103,6 +164,17 @@ namespace ApplicationBDO.Controllers
             return RedirectToAction("Index");
         }
 
+        //private List<CompanyModels> GetMySqlColumnMapping(DataTable dataTable)
+        //{
+        //    List<CompanyModels> colMappings = new List<CompanyModels>();
+        //    int i = 0;
+        //    foreach (DataColumn col in dataTable.Columns)
+        //    {
+        //        colMappings.Add(new CompanyModels(i, col.ColumnName));
+        //        i++;
+        //    }
+        //    return colMappings;
+        //}
         public ActionResult Update()
         {
             var timerSQL = new Stopwatch();
@@ -152,6 +224,7 @@ namespace ApplicationBDO.Controllers
             {
                 sqlConnection.Open();
                 MySqlCommand mySqlCmd = new MySqlCommand(sqlDelete, sqlConnection);
+                mySqlCmd.CommandTimeout = 600;
                 mySqlCmd.ExecuteReader();
             }
 

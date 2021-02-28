@@ -15,7 +15,7 @@ namespace ApplicationBDO.Controllers
     public class CompanyLoadController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private int numberOfRecrds = 2000000;
+        private int numberOfRecrds = 2;
 
         public ActionResult Index()
         {

@@ -16,7 +16,7 @@ namespace ApplicationBDO.Controllers
     public class CompanyNoSQLiteDBController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private string _connestionString = @"C:\Temp\MyDataLiteSQL.db";
+        private string _connestionString = @"C:\Temp\NoSQLite.db";
 
         // DATABASE LITEDB ---------------------- SELECT / INSERT / UPDATE / DELETE
 
@@ -72,10 +72,17 @@ namespace ApplicationBDO.Controllers
             using (var dbNoSQL = new LiteDatabase(_connestionString))
             {
                 var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
-                foreach (var item in collectionCompanyFromFile)
-                {
-                    companyCollection.Insert(item);
-                }
+
+                // BULKING
+
+                companyCollection.InsertBulk(collectionCompanyFromFile);
+
+                // WITHOUT BULKING
+
+                //foreach (var item in collectionCompanyFromFile)
+                //{
+                //    companyCollection.Insert(item);
+                //}
             }
 
             timerSQL.Stop();

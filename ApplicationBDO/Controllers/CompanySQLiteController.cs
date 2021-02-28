@@ -13,7 +13,8 @@ namespace ApplicationBDO.Controllers
     public class CompanySQLiteController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private string _connectionString = "Data source=C:\\Users\\adria\\OneDrive\\Pulpit\\sqlite.db";
+
+        private string _connectionString = @"Data Source=C:\temp\SQLite.db;";
 
         // DATABASE SQLLite ---------------------- SELECT / INSERT / UPDATE / DELETE
 
@@ -65,18 +66,44 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
+            // BULKING 
+
             using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
             {
                 sqlConnection.Open();
-                foreach (var item in collectionCompanyFromFile)
+                using (var sqlCmd = new SQLiteCommand(sqlConnection))
                 {
-                    string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-                                   "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
-
-                    SQLiteCommand sqlCmd = new SQLiteCommand(query, sqlConnection);
-                    sqlCmd.ExecuteNonQuery();
+                    using (var transaction = sqlConnection.BeginTransaction())
+                    {
+                        foreach (var item in collectionCompanyFromFile)
+                        {
+                            sqlCmd.CommandText =
+                                "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                                "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber +
+                                "','" +
+                                item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
+                                item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+                            sqlCmd.ExecuteNonQuery();
+                        }
+                        transaction.Commit();
+                    }
                 }
             }
+
+            // WITHOUT BULKING
+
+            //using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
+            //{
+            //    sqlConnection.Open();
+            //    foreach (var item in collectionCompanyFromFile)
+            //    {
+            //        string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+            //                       "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+            //        SQLiteCommand sqlCmd = new SQLiteCommand(query, sqlConnection);
+            //        sqlCmd.ExecuteNonQuery();
+            //    }
+            //}
 
             timerSQL.Stop();
 

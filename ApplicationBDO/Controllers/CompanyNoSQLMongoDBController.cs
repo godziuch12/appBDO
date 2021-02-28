@@ -66,27 +66,36 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            var collectionCompanyFromFile = DeSerializeObject<IEnumerable<CompanyModels>>("SerializationOverview");
+            var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
+            var listWriters = new List<WriteModel<CompanyModels>>();
+
+            // BULKING
 
             foreach (var item in collectionCompanyFromFile)
             {
-                //companyCollection.BulkWrite(collectionCompanyFromFile);
-                //companyCollection.InsertOne(new CompanyModels
-                //{
-                //    Id = item.Id,
-                //    CompanyId = item.CompanyId,
-                //    Address = item.Address,
-                //    NIP = item.NIP,
-                //    Country = item.Country,
-                //    PostalCode = item.PostalCode,
-                //    RegistrationNumber = item.RegistrationNumber,
-                //    Pesel = item.Pesel,
-                //    Teryt = item.Teryt,
-                //    Name = item.Name
-                //});
-
-                //companyCollection.InsertMany(collectionCompanyFromFile, );
+                listWriters.Add(new InsertOneModel<CompanyModels>(item));
             }
+
+            companyCollection.BulkWrite(listWriters);
+
+            // WITHOUT BULKING
+
+            //foreach (var item in collectionCompanyFromFile)
+            //{
+            //    companyCollection.InsertOne(new CompanyModels
+            //    {
+            //        Id = item.Id,
+            //        CompanyId = item.CompanyId,
+            //        Address = item.Address,
+            //        NIP = item.NIP,
+            //        Country = item.Country,
+            //        PostalCode = item.PostalCode,
+            //        RegistrationNumber = item.RegistrationNumber,
+            //        Pesel = item.Pesel,
+            //        Teryt = item.Teryt,
+            //        Name = item.Name
+            //    });
+            //}
 
             timerSQL.Stop();
 
@@ -118,7 +127,7 @@ namespace ApplicationBDO.Controllers
             timerSQL.Start();
 
             var update = Builders<CompanyModels>.Update.Set(s => s.Country, "Niemcy");
-            companyCollection.UpdateMany( _ => true, update);
+            companyCollection.UpdateMany(_ => true, update);
 
             timerSQL.Stop();
 
@@ -148,7 +157,7 @@ namespace ApplicationBDO.Controllers
         {
             var timerSQL = new Stopwatch();
             timerSQL.Start();
-            
+
             companyCollection.DeleteMany(_ => true);
 
             timerSQL.Stop();
@@ -174,7 +183,6 @@ namespace ApplicationBDO.Controllers
 
             return RedirectToAction("Index");
         }
-
 
         public T DeSerializeObject<T>(string fileName)
         {

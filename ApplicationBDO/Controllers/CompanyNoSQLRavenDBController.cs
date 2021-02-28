@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using ApplicationBDO.Models;
 using Microsoft.Ajax.Utilities;
 using Raven.Client.Documents;
+using Raven.Client.Documents.BulkInsert;
 
 namespace ApplicationBDO.Controllers
 {
@@ -75,9 +76,9 @@ namespace ApplicationBDO.Controllers
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
 
-            int numberOfDocumentsPerSession = 10000;
+            //int numberOfDocumentsPerSession = 10000;
 
-            List<CompanyModels> objectListInChunks = new List<CompanyModels>();
+            //List<CompanyModels> objectListInChunks = new List<CompanyModels>();
 
             using (var documentStore = new DocumentStore
             {
@@ -86,19 +87,42 @@ namespace ApplicationBDO.Controllers
             })
             {
                 documentStore.Initialize();
+
+                // BULKING 
+
+                using (BulkInsertOperation bulkInsert = documentStore.BulkInsert())
                 {
-                    for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+                    foreach (var item in collectionCompanyFromFile)
                     {
-                        using (var session = documentStore.OpenSession())
+                        bulkInsert.Store(new CompanyModels
                         {
-                            session.Advanced.MaxNumberOfRequestsPerSession = 1000;
-                            var skipCollection = collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession);
-                            skipCollection.ForEach(x => session.Store(x));
-                            session.SaveChanges();
-                            session.Advanced.Clear();
-                        }
+                            Id = item.Id,
+                            Country = item.Country,
+                            Address = item.Address,
+                            NIP = item.NIP,
+                            CompanyId = item.CompanyId,
+                            Name = item.Name,
+                            Pesel = item.Pesel,
+                            PostalCode = item.PostalCode,
+                            RegistrationNumber = item.RegistrationNumber,
+                            Teryt = item.Teryt
+                        });
                     }
                 }
+
+                // WITHOUT BULKING
+
+                //for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+                //{
+                //    using (var session = documentStore.OpenSession())
+                //    {
+                //        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
+                //        var skipCollection = collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession);
+                //        skipCollection.ForEach(x => session.Store(x));
+                //        session.SaveChanges();
+                //        session.Advanced.Clear();
+                //    }
+                //}
             }
 
             timerSQL.Stop();
