@@ -13,7 +13,6 @@ namespace ApplicationBDO.Controllers
     public class CompanySQLiteController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-
         private string _connectionString = @"Data Source=C:\temp\SQLite.db;";
 
         // DATABASE SQLLite ---------------------- SELECT / INSERT / UPDATE / DELETE
@@ -35,6 +34,10 @@ namespace ApplicationBDO.Controllers
                 sqlConnection.Open();
                 SQLiteCommand mySqlCmd = new SQLiteCommand(sqlSelect, sqlConnection);
                 var result = mySqlCmd.ExecuteReader();
+                foreach (var item in result)
+                {
+                    Console.WriteLine(item);
+                }
             }
 
             TimeSpan timeTaken = timerSQL.Elapsed;

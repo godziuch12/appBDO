@@ -16,7 +16,6 @@ namespace ApplicationBDO.Controllers
     public class CompanyMySQLController : Controller
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
-        private ApplicationDbContextMySQL dbMySQL = new ApplicationDbContextMySQL();
         private string _connectionString = "data source=localhost; port=3306; initial catalog=appBDO; username=root;password=;SslMode=none";
 
         // DATABASE MySQL ---------------------- SELECT / INSERT / UPDATE / DELETE
@@ -38,6 +37,10 @@ namespace ApplicationBDO.Controllers
                 sqlConnection.Open();
                 MySqlCommand mySqlCmd = new MySqlCommand(sqlSelect, sqlConnection);
                 var result = mySqlCmd.ExecuteReader();
+                foreach (var item in result)
+                {
+                    Console.WriteLine(item);
+                }
             }
 
             TimeSpan timeTaken = timerSQL.Elapsed;

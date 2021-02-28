@@ -17,6 +17,7 @@ namespace ApplicationBDO.Controllers
     {
         private ApplicationDbContext dbSQL = new ApplicationDbContext();
         private string _connectionString = "data source=DESKTOP-4I4A5QQ\\SQLEXPRESS;initial catalog=ApplicationBDO;Integrated Security=SSPI;persist security info=True;";
+
         // DATABASE MSSQLExpress ---------------------- SELECT / INSERT / UPDATE / DELETE}
 
         public ActionResult Index()
@@ -29,17 +30,40 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlSelect = "SELECT * FROM Company";
+            // NOTRACING
 
-            var list = dbSQL.CompanyModels;
+            var listNoTracing = dbSQL.CompanyModels;
 
-            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            foreach (var item in listNoTracing)
             {
-                sqlConnection.Open();
-
-                SqlCommand sqlCmd = new SqlCommand(sqlSelect, sqlConnection);
-                var result = sqlCmd.ExecuteReader();
+                Console.WriteLine(item);
             }
+
+            // TRACING
+
+            //var listTracing = dbSQL.CompanyModels.AsNoTracking();
+
+            //foreach (var item in listTracing)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            // QUERY 
+
+            //string sqlSelect = "SELECT * FROM Company";
+
+            //using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            //{
+            //    sqlConnection.Open();
+
+            //    SqlCommand sqlCmd = new SqlCommand(sqlSelect, sqlConnection);
+            //    var result = sqlCmd.ExecuteReader();
+
+            //    foreach (var item in result)
+            //    {
+            //        Console.WriteLine(result);
+            //    }
+            //}
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();

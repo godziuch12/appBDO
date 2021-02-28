@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -39,7 +40,11 @@ namespace ApplicationBDO.Controllers
                 {
                     using (var session = documentStore.OpenSession())
                     {
-                        var result = session.Query<CompanyModels>();
+                        var result = session.Query<CompanyModels>().AsNoTracking();
+                        foreach (var item in result)
+                        {
+                            Console.WriteLine(item);
+                        }
                     }
                 }
             }

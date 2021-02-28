@@ -35,6 +35,10 @@ namespace ApplicationBDO.Controllers
                 var companyCollection = dbNoSQL.GetCollection<CompanyModels>("company");
 
                 var result = companyCollection.Find(f => true);
+                foreach (var item in result)
+                {
+                    Console.WriteLine(item);
+                }
             }
 
             dbSQL.SaveChanges();
