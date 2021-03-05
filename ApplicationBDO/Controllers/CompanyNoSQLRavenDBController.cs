@@ -95,39 +95,39 @@ namespace ApplicationBDO.Controllers
 
                 // BULKING 
 
-                using (BulkInsertOperation bulkInsert = documentStore.BulkInsert())
-                {
-                    foreach (var item in collectionCompanyFromFile)
-                    {
-                        bulkInsert.Store(new CompanyModels
-                        {
-                            Id = item.Id,
-                            Country = item.Country,
-                            Address = item.Address,
-                            NIP = item.NIP,
-                            CompanyId = item.CompanyId,
-                            Name = item.Name,
-                            Pesel = item.Pesel,
-                            PostalCode = item.PostalCode,
-                            RegistrationNumber = item.RegistrationNumber,
-                            Teryt = item.Teryt
-                        });
-                    }
-                }
+                //using (BulkInsertOperation bulkInsert = documentStore.BulkInsert())
+                //{
+                //    foreach (var item in collectionCompanyFromFile)
+                //    {
+                //        bulkInsert.Store(new CompanyModels
+                //        {
+                //            Id = item.Id,
+                //            Country = item.Country,
+                //            Address = item.Address,
+                //            NIP = item.NIP,
+                //            CompanyId = item.CompanyId,
+                //            Name = item.Name,
+                //            Pesel = item.Pesel,
+                //            PostalCode = item.PostalCode,
+                //            RegistrationNumber = item.RegistrationNumber,
+                //            Teryt = item.Teryt
+                //        });
+                //    }
+                //}
 
                 // WITHOUT BULKING
 
-                //for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
-                //{
-                //    using (var session = documentStore.OpenSession())
-                //    {
-                //        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
-                //        var skipCollection = collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession);
-                //        skipCollection.ForEach(x => session.Store(x));
-                //        session.SaveChanges();
-                //        session.Advanced.Clear();
-                //    }
-                //}
+                for (int i = 0; i < collectionCompanyFromFile.Count; i += numberOfDocumentsPerSession)
+                {
+                    using (var session = documentStore.OpenSession())
+                    {
+                        session.Advanced.MaxNumberOfRequestsPerSession = 1000;
+                        var skipCollection = collectionCompanyFromFile.Skip(i).Take(numberOfDocumentsPerSession);
+                        skipCollection.ForEach(x => session.Store(x));
+                        session.SaveChanges();
+                        session.Advanced.Clear();
+                    }
+                }
             }
 
             timerSQL.Stop();

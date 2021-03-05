@@ -79,14 +79,14 @@ namespace ApplicationBDO.Controllers
 
                 // BULKING
 
-                companyCollection.InsertBulk(collectionCompanyFromFile);
+                //companyCollection.InsertBulk(collectionCompanyFromFile);
 
                 // WITHOUT BULKING
 
-                //foreach (var item in collectionCompanyFromFile)
-                //{
-                //    companyCollection.Insert(item);
-                //}
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    companyCollection.Insert(item);
+                }
             }
 
             timerSQL.Stop();

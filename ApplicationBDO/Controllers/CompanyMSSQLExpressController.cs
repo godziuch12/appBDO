@@ -30,18 +30,18 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            // NOTRACING
+            //// NOTRACING
 
-            var listNoTracing = dbSQL.CompanyModels;
+            //var listNoTracing = dbSQL.CompanyModels.AsNoTracking();
 
-            foreach (var item in listNoTracing)
-            {
-                Console.WriteLine(item);
-            }
+            //foreach (var item in listNoTracing)
+            //{
+            //    Console.WriteLine(item);
+            //}
 
-            // TRACING
+            //// TRACING
 
-            //var listTracing = dbSQL.CompanyModels.AsNoTracking();
+            //var listTracing = dbSQL.CompanyModels;
 
             //foreach (var item in listTracing)
             //{
@@ -50,20 +50,20 @@ namespace ApplicationBDO.Controllers
 
             // QUERY 
 
-            //string sqlSelect = "SELECT * FROM Company";
+            string sqlSelect = "SELECT * FROM Company";
 
-            //using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
-            //{
-            //    sqlConnection.Open();
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
 
-            //    SqlCommand sqlCmd = new SqlCommand(sqlSelect, sqlConnection);
-            //    var result = sqlCmd.ExecuteReader();
+                SqlCommand sqlCmd = new SqlCommand(sqlSelect, sqlConnection);
+                var result = sqlCmd.ExecuteReader();
 
-            //    foreach (var item in result)
-            //    {
-            //        Console.WriteLine(result);
-            //    }
-            //}
+                foreach (var item in result)
+                {
+                    Console.WriteLine(result);
+                }
+            }
 
             TimeSpan timeTaken = timerSQL.Elapsed;
             var timeLog = timeTaken.ToString();
@@ -93,78 +93,81 @@ namespace ApplicationBDO.Controllers
             timerSQL.Start();
 
             var collectionCompanyFromFile = DeSerializeObject<List<CompanyModels>>("SerializationOverview");
-    
+
             // BULKING 
 
-            DataTable tbl = new DataTable();
-            tbl.Columns.Add(new DataColumn("Id", typeof(string)));
-            tbl.Columns.Add(new DataColumn("CompanyId", typeof(string)));
-            tbl.Columns.Add(new DataColumn("RegistrationNumber", typeof(string)));
-            tbl.Columns.Add(new DataColumn("Name", typeof(string)));
-            tbl.Columns.Add(new DataColumn("NIP", typeof(string)));
-            tbl.Columns.Add(new DataColumn("Pesel", typeof(string)));
-            tbl.Columns.Add(new DataColumn("Country", typeof(string)));
-            tbl.Columns.Add(new DataColumn("Address", typeof(string)));
-            tbl.Columns.Add(new DataColumn("PostalCode", typeof(string)));
-            tbl.Columns.Add(new DataColumn("Teryt", typeof(string)));
+            //DataTable tbl = new DataTable();
+            //tbl.Columns.Add(new DataColumn("Id", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("CompanyId", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("RegistrationNumber", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("Name", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("NIP", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("Pesel", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("Country", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("Address", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("PostalCode", typeof(string)));
+            //tbl.Columns.Add(new DataColumn("Teryt", typeof(string)));
 
-            foreach (var item in collectionCompanyFromFile)
-            {
-                DataRow row = tbl.NewRow();
+            //foreach (var item in collectionCompanyFromFile)
+            //{
+            //    DataRow row = tbl.NewRow();
 
-                row["Id"] = item.Id;
-                row["CompanyId"] = item.CompanyId;
-                row["RegistrationNumber"] = item.RegistrationNumber;
-                row["Name"] = item.Name;
-                row["NIP"] = item.NIP;
-                row["Pesel"] = item.Pesel;
-                row["Country"] = item.Country;
-                row["Address"] = item.Address;
-                row["PostalCode"] = item.PostalCode;
-                row["Teryt"] = item.Teryt;
+            //    row["Id"] = item.Id;
+            //    row["CompanyId"] = item.CompanyId;
+            //    row["RegistrationNumber"] = item.RegistrationNumber;
+            //    row["Name"] = item.Name;
+            //    row["NIP"] = item.NIP;
+            //    row["Pesel"] = item.Pesel;
+            //    row["Country"] = item.Country;
+            //    row["Address"] = item.Address;
+            //    row["PostalCode"] = item.PostalCode;
+            //    row["Teryt"] = item.Teryt;
 
-                tbl.Rows.Add(row);
-            }
-
-            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
-            {
-                sqlConnection.Open();
-
-                SqlBulkCopy objbulk = new SqlBulkCopy(sqlConnection);
-                objbulk.BulkCopyTimeout = 60;
-
-                objbulk.DestinationTableName = "dbo.Company";
-                objbulk.ColumnMappings.Add("Id", "Id");
-                objbulk.ColumnMappings.Add("CompanyId", "CompanyId");
-                objbulk.ColumnMappings.Add("RegistrationNumber", "RegistrationNumber");
-                objbulk.ColumnMappings.Add("Name", "Name");
-                objbulk.ColumnMappings.Add("NIP", "NIP");
-                objbulk.ColumnMappings.Add("Pesel", "Pesel");
-                objbulk.ColumnMappings.Add("Country", "Country");
-                objbulk.ColumnMappings.Add("Address", "Address");
-                objbulk.ColumnMappings.Add("PostalCode", "PostalCode");
-                objbulk.ColumnMappings.Add("Teryt", "Teryt");
-
-                objbulk.WriteToServer(tbl);
-            }
-
-            // WITHOUT BULKING
+            //    tbl.Rows.Add(row);
+            //}
 
             //using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             //{
             //    sqlConnection.Open();
-            //    foreach (var item in collectionCompanyFromFile)
-            //    {
-            //        string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-            //                           "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" +
-            //                           item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
-            //                           item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
 
-            //        SqlCommand sqlCmd = new SqlCommand(sqlInsert, sqlConnection);
-            //        sqlCmd.ExecuteNonQuery();
-            //    }
+            //    SqlBulkCopy objbulk = new SqlBulkCopy(sqlConnection);
+            //    objbulk.BulkCopyTimeout = 60;
+
+            //    objbulk.DestinationTableName = "dbo.Company";
+            //    objbulk.ColumnMappings.Add("Id", "Id");
+            //    objbulk.ColumnMappings.Add("CompanyId", "CompanyId");
+            //    objbulk.ColumnMappings.Add("RegistrationNumber", "RegistrationNumber");
+            //    objbulk.ColumnMappings.Add("Name", "Name");
+            //    objbulk.ColumnMappings.Add("NIP", "NIP");
+            //    objbulk.ColumnMappings.Add("Pesel", "Pesel");
+            //    objbulk.ColumnMappings.Add("Country", "Country");
+            //    objbulk.ColumnMappings.Add("Address", "Address");
+            //    objbulk.ColumnMappings.Add("PostalCode", "PostalCode");
+            //    objbulk.ColumnMappings.Add("Teryt", "Teryt");
+
+            //    objbulk.WriteToServer(tbl);
             //}
 
+            // WITHOUT BULKING
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                                       "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" +
+                                       item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" +
+                                       item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+                    SqlCommand sqlCmd = new SqlCommand(sqlInsert, sqlConnection);
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+
+
+            dbSQL.CompanyModels.Add(new CompanyModels() { Id = "2", Country = "Polska" });
+            dbSQL.SaveChanges();
 
             timerSQL.Stop();
 
@@ -195,11 +198,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
-
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
                 SqlCommand sqlCmd = new SqlCommand(sqlUpdate, sqlConnection);
                 sqlCmd.ExecuteNonQuery();
             }
@@ -233,11 +236,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlDelete = "DELETE FROM Company";
-
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlDelete = "DELETE FROM Company";
                 SqlCommand sqlCmd = new SqlCommand(sqlDelete, sqlConnection);
                 sqlCmd.ExecuteNonQuery();
             }

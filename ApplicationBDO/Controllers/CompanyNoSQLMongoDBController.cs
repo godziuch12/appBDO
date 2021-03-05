@@ -72,12 +72,12 @@ namespace ApplicationBDO.Controllers
 
             // BULKING
 
-            foreach (var item in collectionCompanyFromFile)
-            {
-                listWriters.Add(new InsertOneModel<CompanyModels>(item));
-            }
+            //foreach (var item in collectionCompanyFromFile)
+            //{
+            //    listWriters.Add(new InsertOneModel<CompanyModels>(item));
+            //}
 
-            companyCollection.BulkWrite(listWriters);
+            //companyCollection.BulkWrite(listWriters);
 
             // WITHOUT BULKING
 

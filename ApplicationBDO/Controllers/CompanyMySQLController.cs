@@ -30,11 +30,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlSelect = "SELECT * FROM Company";
-
             using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlSelect = "SELECT * FROM Company";
                 MySqlCommand mySqlCmd = new MySqlCommand(sqlSelect, sqlConnection);
                 var result = mySqlCmd.ExecuteReader();
                 foreach (var item in result)
@@ -108,7 +108,7 @@ namespace ApplicationBDO.Controllers
             {
                 sqlConnection.Open();
 
-                using (MySqlTransaction tran = sqlConnection.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                using (MySqlTransaction tran = sqlConnection.BeginTransaction(IsolationLevel.Serializable))
                 {
                     using (MySqlCommand cmd = new MySqlCommand())
                     {
@@ -133,6 +133,7 @@ namespace ApplicationBDO.Controllers
             //using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
             //{
             //    sqlConnection.Open();
+
             //    foreach (var item in collectionCompanyFromFile)
             //    {
             //        string sqlInsert = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
@@ -183,11 +184,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
-
             using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlUpdate = "UPDATE Company SET Country = 'Niemcy'";
                 MySqlCommand mySqlCmd = new MySqlCommand(sqlUpdate, sqlConnection);
                 mySqlCmd.ExecuteReader();
             }
@@ -221,11 +222,11 @@ namespace ApplicationBDO.Controllers
             var timerSQL = new Stopwatch();
             timerSQL.Start();
 
-            string sqlDelete = "DELETE FROM Company";
-
             using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
             {
                 sqlConnection.Open();
+
+                string sqlDelete = "DELETE FROM Company";
                 MySqlCommand mySqlCmd = new MySqlCommand(sqlDelete, sqlConnection);
                 mySqlCmd.CommandTimeout = 600;
                 mySqlCmd.ExecuteReader();

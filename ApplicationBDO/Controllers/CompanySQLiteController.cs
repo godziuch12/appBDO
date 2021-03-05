@@ -95,18 +95,19 @@ namespace ApplicationBDO.Controllers
 
             // WITHOUT BULKING
 
-            //using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
-            //{
-            //    sqlConnection.Open();
-            //    foreach (var item in collectionCompanyFromFile)
-            //    {
-            //        string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
-            //                       "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+            using (SQLiteConnection sqlConnection = new SQLiteConnection(_connectionString))
+            {
+                sqlConnection.Open();
 
-            //        SQLiteCommand sqlCmd = new SQLiteCommand(query, sqlConnection);
-            //        sqlCmd.ExecuteNonQuery();
-            //    }
-            //}
+                foreach (var item in collectionCompanyFromFile)
+                {
+                    string query = "INSERT INTO Company (Id,CompanyId,RegistrationNumber,Name,NIP,Pesel,Country,Address,PostalCode,Teryt) " +
+                                   "VALUES ('" + item.Id + "','" + item.CompanyId + "','" + item.RegistrationNumber + "','" + item.Name + "','" + item.NIP + "','" + item.Pesel + "','" + item.Country + "','" + item.Address + "','" + item.PostalCode + "','" + item.Teryt + "')";
+
+                    SQLiteCommand sqlCmd = new SQLiteCommand(query, sqlConnection);
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
 
             timerSQL.Stop();
 
